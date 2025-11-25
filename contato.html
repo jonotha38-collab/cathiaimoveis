@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato | Cathia Aguiar - Corretora de Imóveis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 10 45 L 50 10 L 90 45" />
+                <path d="M 20 36 V 90 H 80 V 36" />
+                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                <path d="M 50 75 V 90" />
+            </svg>
+            <div class="logo-text">
+                <span class="logo-title">CATHIA AGUIAR</span>
+                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                <span class="logo-creci">CRECI 1743</span>
+            </div>
+        </a>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="imoveis.html">Imóveis</a>
+                
+                <a href="sobre.html">Sobre</a>
+                <a href="contato.html" class="active">Contato</a>
+                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" style="height: 40vh; min-height: 300px; background-image: linear-gradient(rgba(0, 59, 70, 0.8), rgba(0, 59, 70, 0.8)), url('https://images.unsplash.com/photo-1423666639041-f142fcb963b8?q=80&w=1920&auto=format&fit=crop');">
+        <div class="hero-content fade-in">
+            <h1>Atendimento Private</h1>
+            <p>Canais exclusivos para investidores e proprietários de alta renda.</p>
+        </div>
+    </header>
+
+    <section class="section container">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+            <!-- Form -->
+            <div class="fade-in">
+                <h2 class="text-primary">Inicie uma Conversa Privada</h2>
+                <p style="margin-bottom: 2rem;">Nossa equipe de Concierge Imobiliário retornará seu contato com total discrição em até 2 horas comerciais.</p>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail Corporativo (Preferencial)</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefone / WhatsApp Private</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Interesse</label>
+                        <select id="subject" class="form-control">
+                            <option value="comprar">Aquisição de Ativo</option>
+                            <option value="vender">Valuation & Venda</option>
+                            <option value="parceria">Parceria Institucional</option>
+                            <option value="outro">Assessoria Jurídica/Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensagem</label>
+                        <textarea id="message" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Solicitar Consultoria</button>
+                    <p id="feedback" style="margin-top: 1rem; color: green; display: none;">Solicitação recebida com sucesso. Entraremos em contato.</p>
+                </form>
+            </div>
+
+            <!-- Info -->
+            <div class="fade-in">
+                <h2 class="text-primary">Contato</h2>
+                
+                <div style="margin-bottom: 2rem; margin-top: 2rem;">
+                    <p style="margin-bottom: 1rem;"><strong style="color: var(--color-accent);">Telefone:</strong></p>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem;">+55 79 9812-9141</p>
+                    
+                    <p style="margin-bottom: 1rem;"><strong style="color: var(--color-accent);">E-mail:</strong></p>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem;">cathiaaguiar@hotmail.com</p>
+                </div>
+
+                <div class="map-placeholder" style="margin-top: 2rem; position: relative; background: var(--color-blue-soft); height: 300px; display: flex; align-items: center; justify-content: center;">
+                    <div>
+                        <i class="fas fa-map-marker-alt" style="color: var(--color-accent); font-size: 3rem; text-shadow: 0 2px 5px rgba(0,0,0,0.1);"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="copyright text-center">&copy; 2025 Cathia Aguiar - Corretora de Imóveis.</div>
+        </div>
+    </footer>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+
+            // Coletar dados do formulário
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Preparar corpo do email
+            const emailBody = `Nova mensagem de contato recebida:
+
+DADOS DO CONTATO:
+- Nome: ${formData.name}
+- E-mail: ${formData.email}
+- Telefone: ${formData.phone}
+- Interesse: ${formData.subject}
+
+MENSAGEM:
+${formData.message}
+
+Data/Hora: ${new Date().toLocaleString('pt-BR')}`;
+            
+            // Enviar por mailto (abre cliente de email)
+            const mailtoLink = `mailto:cathiaaguiar@hotmail.com?subject=Contato do Site - ${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = mailtoLink;
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                document.getElementById('feedback').style.display = 'block';
+                document.getElementById('feedback').innerText = 'Mensagem preparada! Seu cliente de email foi aberto. Se preferir, entre em contato pelo telefone +55 79 9812-9141';
+                this.reset();
+                setTimeout(() => {
+                    document.getElementById('feedback').style.display = 'none';
+                }, 8000);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

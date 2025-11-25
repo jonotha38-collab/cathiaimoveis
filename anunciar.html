@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venda seu Imóvel | Cathia Aguiar - Corretora de Imóveis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .upload-area {
+            border: 2px dashed var(--color-accent);
+            background: #fafafa;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+        .upload-area:hover {
+            background: #f0f0f0;
+            border-color: var(--color-primary);
+        }
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            color: #aaa;
+        }
+        .step.active {
+            border-color: var(--color-accent);
+            background: var(--color-accent);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 10 45 L 50 10 L 90 45" />
+                <path d="M 20 36 V 90 H 80 V 36" />
+                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                <path d="M 50 75 V 90" />
+            </svg>
+            <div class="logo-text">
+                <span class="logo-title">CATHIA AGUIAR</span>
+                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                <span class="logo-creci">CRECI 1743</span>
+            </div>
+        </a>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="imoveis.html">Imóveis</a>
+                <a href="anunciar.html" class="active">Anunciar</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="contato.html">Contato</a>
+                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" style="height: 45vh; min-height: 350px; background-image: linear-gradient(rgba(0, 59, 70, 0.8), rgba(0, 59, 70, 0.8)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1920&auto=format&fit=crop');">
+        <div class="hero-content fade-in">
+            <h1>Confie seu Patrimônio à Excelência</h1>
+            <p>Avaliação precisa, produção visual cinematográfica e acesso aos compradores mais qualificados do mercado global.</p>
+        </div>
+    </header>
+
+    <section class="section container">
+        <div class="text-center fade-in" style="margin-bottom: 4rem;">
+            <h2 class="text-primary">Cadastre seu Imóvel</h2>
+            <p>Preencha os dados preliminares abaixo. Nossa equipe de Asset Management realizará uma análise de viabilidade e entrará em contato para o Valuation oficial.</p>
+        </div>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="step-indicator">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+            </div>
+
+            <form id="propertyForm" class="fade-in">
+                <!-- Dados do Imóvel -->
+                <h3 style="margin-bottom: 1.5rem; color: var(--color-primary); border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">1. Dados do Imóvel</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Tipo de Imóvel</label>
+                        <select class="form-control">
+                            <option>Casa</option>
+                            <option>Apartamento</option>
+                            <option>Cobertura</option>
+                            <option>Terreno / Lote</option>
+                            <option>Fazenda / Haras</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Condomínio / Edifício (Se houver)</label>
+                        <input type="text" class="form-control" placeholder="Ex: Fazenda Boa Vista">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Endereço Completo</label>
+                    <input type="text" class="form-control" placeholder="Rua, Número, Bairro, Cidade - UF" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Área Útil (m²)</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Quartos</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Suítes</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Vagas</label>
+                        <input type="number" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Diferenciais (Piscina, Vista Mar, Heliponto, etc.)</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+
+                <!-- Imagens -->
+                <h3 style="margin: 2.5rem 0 1.5rem; color: var(--color-primary); border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">2. Imagens (Preliminar)</h3>
+                
+                <div class="upload-area" id="drop-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Arraste e solte fotos aqui ou <strong>clique para selecionar</strong></p>
+                    <p style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Formatos aceitos: JPG, PNG. Max 10MB.</p>
+                    <input type="file" id="fileElem" multiple accept="image/*" style="display:none">
+                </div>
+                <div id="gallery-preview" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 2rem;"></div>
+
+                <!-- Contato -->
+                <h3 style="margin: 2.5rem 0 1.5rem; color: var(--color-primary); border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">3. Seus Dados</h3>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone / WhatsApp</label>
+                        <input type="tel" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Valor Estimado de Venda (R$)</label>
+                    <input type="text" class="form-control" id="price-input">
+                </div>
+
+                <div style="margin-top: 2rem; text-align: right;">
+                    <button type="submit" class="btn" style="padding: 15px 40px; font-size: 1rem;">Enviar para Avaliação</button>
+                </div>
+                
+                <p id="feedback-form" style="margin-top: 1rem; color: green; display: none; text-align: center; font-weight: bold;">Cadastro enviado com sucesso! Em breve nosso time entrará em contato.</p>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 10 45 L 50 10 L 90 45" />
+                <path d="M 20 36 V 90 H 80 V 36" />
+                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                <path d="M 50 75 V 90" />
+            </svg>
+            <div class="logo-text">
+                <span class="logo-title">CATHIA AGUIAR</span>
+                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                <span class="logo-creci">CRECI 1743</span>
+            </div>
+        </a>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Corretora de imóveis especializada em residências exclusivas e alto padrão.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Institucional</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="imoveis.html">Imóveis</a></li>
+                        
+                        <li><a href="sobre.html">Sobre Nós</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone" style="color: var(--color-accent); margin-right: 8px;"></i> +55 79 9812-9141</li>
+                        <li><i class="fas fa-envelope" style="color: var(--color-accent); margin-right: 8px;"></i> cathiaaguiar@hotmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Cathia Aguiar - Corretora de Imóveis. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // Inicializar EmailJS (você precisará criar uma conta gratuita em https://www.emailjs.com)
+        // e substituir 'YOUR_PUBLIC_KEY' pela sua chave pública
+        // emailjs.init('YOUR_PUBLIC_KEY');
+    </script>
+    
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Upload Drag & Drop Simples
+        const dropArea = document.getElementById('drop-area');
+        const fileElem = document.getElementById('fileElem');
+        const gallery = document.getElementById('gallery-preview');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+        dropArea.addEventListener('click', () => fileElem.click());
+        fileElem.addEventListener('change', handleFiles);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files: files } });
+        }
+
+        function handleFiles(e) {
+            const files = [...e.target.files];
+            files.forEach(previewFile);
+        }
+
+        function previewFile(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = function() {
+                const img = document.createElement('img');
+                img.src = reader.result;
+                img.style.width = '100px';
+                img.style.height = '80px';
+                img.style.objectFit = 'cover';
+                img.style.border = '1px solid #ccc';
+                gallery.appendChild(img);
+            }
+        }
+
+        // Formatação Moeda
+        const priceInput = document.getElementById('price-input');
+        priceInput.addEventListener('keyup', function(e) {
+            let value = e.target.value.replace(/\D/g, "");
+            value = (value / 100).toFixed(2) + "";
+            value = value.replace(".", ",");
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            e.target.value = "R$ " + value;
+        });
+
+        // Submit - Envio por Email
+        document.getElementById('propertyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+            
+            // Coletar dados do formulário
+            const formFields = {
+                tipoImovel: this.querySelector('select').value || 'Não informado',
+                endereco: this.querySelector('input[placeholder*="Endereço"]')?.value || 'Não informado',
+                area: this.querySelector('input[placeholder*="Área"]')?.value || 'Não informado',
+                quartos: this.querySelector('input[placeholder*="Quartos"]')?.value || 'Não informado',
+                suites: this.querySelector('input[placeholder*="Suítes"]')?.value || 'Não informado',
+                vagas: this.querySelector('input[placeholder*="Vagas"]')?.value || 'Não informado',
+                diferenciais: this.querySelector('textarea').value || 'Não informado',
+                nome: Array.from(this.querySelectorAll('input[type="text"]')).find(input => !input.placeholder || input.placeholder.includes('Nome'))?.value || 'Não informado',
+                telefone: this.querySelector('input[type="tel"]')?.value || 'Não informado',
+                email: this.querySelector('input[type="email"]')?.value || 'Não informado',
+                valor: document.getElementById('price-input')?.value || 'Não informado'
+            };
+            
+            // Preparar corpo do email
+            const emailBody = `Nova solicitação de avaliação de imóvel recebida:
+
+DADOS DO IMÓVEL:
+- Tipo: ${formFields.tipoImovel}
+- Endereço: ${formFields.endereco}
+- Área: ${formFields.area} m²
+- Quartos: ${formFields.quartos}
+- Suítes: ${formFields.suites}
+- Vagas: ${formFields.vagas}
+- Diferenciais: ${formFields.diferenciais}
+- Valor Estimado: ${formFields.valor}
+
+DADOS DO CONTATO:
+- Nome: ${formFields.nome}
+- Telefone: ${formFields.telefone}
+- E-mail: ${formFields.email}
+
+Data/Hora: ${new Date().toLocaleString('pt-BR')}`;
+            
+            // SOLUÇÃO 1: Usar mailto (abre cliente de email padrão)
+            // Esta é uma solução simples que funciona imediatamente
+            const mailtoLink = `mailto:cathiaaguiar@hotmail.com?subject=Nova Avaliação de Imóvel - ${encodeURIComponent(formFields.nome)}&body=${encodeURIComponent(emailBody)}`;
+            
+            // Abrir cliente de email
+            window.location.href = mailtoLink;
+            
+            // SOLUÇÃO 2: Para envio automático sem abrir cliente de email,
+            // você precisará configurar EmailJS (gratuito):
+            // 1. Criar conta em https://www.emailjs.com
+            // 2. Configurar serviço de email (Gmail, Outlook, etc.)
+            // 3. Criar template de email
+            // 4. Substituir o código abaixo pelo código do EmailJS
+            /*
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                to_email: 'cathiaaguiar@hotmail.com',
+                subject: 'Nova Avaliação de Imóvel',
+                message: emailBody
+            }).then(function() {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+                document.getElementById('feedback-form').style.display = 'block';
+                document.getElementById('feedback-form').innerHTML = 'Cadastro enviado com sucesso! Entraremos em contato em breve.';
+                this.reset();
+                gallery.innerHTML = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, function(error) {
+                alert('Erro ao enviar. Por favor, entre em contato pelo telefone +55 79 9812-9141');
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            });
+            */
+            
+            // Mostrar feedback de sucesso
+            setTimeout(() => {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+                document.getElementById('feedback-form').style.display = 'block';
+                document.getElementById('feedback-form').innerHTML = 'Formulário preenchido! Seu cliente de email foi aberto. Se preferir, entre em contato diretamente pelo telefone +55 79 9812-9141';
+                this.reset();
+                gallery.innerHTML = '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
