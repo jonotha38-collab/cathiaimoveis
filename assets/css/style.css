@@ -2,24 +2,24 @@
    VARIÁVEIS E RESET
    ========================================= */
 :root {
-    /* Paleta Moderna: Dourado e Azul */
-    --color-primary: #1E3A5F;
-    --color-primary-dark: #0F1F35;
-    --color-primary-light: #2C5282;
-    --color-accent: #D4AF37;
-    --color-accent-light: #F4D03F;
-    --color-accent-dark: #B8941F;
-    --color-blue-light: #3B82F6;
-    --color-blue-soft: #E8F4F8;
+    /* Paleta Terracota Minimalista & Moderna */
+    --color-primary: #B8674D;
+    --color-primary-dark: #8B4D35;
+    --color-primary-light: #E8DDD6;
+    --color-accent: #D97B57;
+    --color-accent-light: #E8B5A0;
+    --color-accent-dark: #7A3E2F;
+    --color-blue-light: #F5F1ED;
+    --color-blue-soft: #C85A3A;
     
-    /* Neutros Minimalistas */
-    --color-bg: #FAFAFA;
+    /* Neutros Minimalistas - Tons Quentes */
+    --color-bg: #FEFCFB;
     --color-white: #FFFFFF;
-    --color-text: #1A1A1A;
-    --color-text-light: #6B7280;
-    --color-text-lighter: #9CA3AF;
-    --border-color: rgba(212, 175, 55, 0.2);
-    --border-light: rgba(30, 58, 95, 0.1);
+    --color-text: #2D2D2D;
+    --color-text-light: #6B6B6B;
+    --color-text-lighter: #9A9A9A;
+    --border-color: rgba(184, 103, 77, 0.15);
+    --border-light: rgba(184, 103, 77, 0.08);
     
     /* Tipografia Sofisticada e Elegante */
     --font-serif: 'Cormorant Garamond', serif;
@@ -39,8 +39,8 @@
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
     --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
-    --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
-    --shadow-blue: 0 4px 20px rgba(30, 58, 95, 0.1);
+    --shadow-gold: 0 4px 20px rgba(184, 103, 77, 0.12);
+    --shadow-blue: 0 4px 20px rgba(184, 103, 77, 0.08);
     
     /* Transições Suaves */
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -200,10 +200,10 @@ ul {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: #051024;
+    background-color: #B8674D;
     backdrop-filter: blur(20px);
     padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    border-bottom: 1px solid rgba(184, 103, 77, 0.2);
     box-shadow: var(--shadow-sm);
 }
 
@@ -223,8 +223,8 @@ ul {
 .logo-icon {
     width: 40px;
     height: 40px;
-    color: var(--color-accent);
-    stroke: var(--color-accent);
+    color: #e8dbbd;
+    stroke: #e8dbbd;
     margin-bottom: 5px;
 }
 
@@ -246,7 +246,7 @@ ul {
 .logo-subtitle {
     font-family: var(--font-sans);
     font-size: 0.7rem;
-    color: var(--color-accent);
+    color: #e8dbbd;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-top: 2px;
@@ -255,7 +255,7 @@ ul {
 .logo-creci {
     font-family: var(--font-sans);
     font-size: 0.65rem;
-    color: var(--color-accent); /* or white with opacity */
+    color: #e8dbbd;
     letter-spacing: 0.05em;
     opacity: 0.9;
 }
@@ -402,8 +402,8 @@ ul {
     position: relative;
     height: 85vh;
     min-height: 650px;
-    background: linear-gradient(135deg, rgba(30, 58, 95, 0.85) 0%, rgba(15, 31, 53, 0.75) 100%), 
-                url('../img/Logo/img logo.jpg');
+    background: linear-gradient(135deg, rgba(184, 103, 77, 0.8) 0%, rgba(232, 181, 160, 0.3) 100%), 
+                url('../img/Logo/logo4.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -417,9 +417,9 @@ ul {
 .hero-content {
     max-width: 900px;
     padding: 3rem 2.5rem;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid rgba(232, 181, 160, 0.3);
     backdrop-filter: blur(10px);
-    background: rgba(30, 58, 95, 0.4);
+    background: rgba(123, 62, 47, 0.35);
     animation: fadeInScale 1s ease-out;
     box-shadow: var(--shadow-lg);
 }
@@ -586,7 +586,7 @@ ul {
     flex: 1;
     background: rgba(255,255,255,0.08);
     padding: 2.5rem;
-    border: 1px solid rgba(212, 175, 55, 0.25);
+    border: 1px solid rgba(232, 181, 160, 0.25);
     scroll-snap-align: center;
     text-align: center;
     backdrop-filter: blur(10px);
