@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase - Verificador de Configuração</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 20px; }
+        .check-item { margin: 15px 0; padding: 15px; border-left: 4px solid #ddd; border-radius: 4px; }
+        .check-item.success { border-left-color: #28a745; background: #f0f9f1; }
+        .check-item.error { border-left-color: #dc3545; background: #f8f1f2; }
+        .check-item.warning { border-left-color: #ffc107; background: #fff8f0; }
+        .check-item h3 { margin-bottom: 8px; font-size: 16px; }
+        .check-item p { font-size: 14px; color: #666; }
+        .status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+        .status.ok { background: #28a745; color: white; }
+        .status.fail { background: #dc3545; color: white; }
+        .status.warn { background: #ffc107; color: black; }
+        .test-btn { display: inline-block; background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .test-btn:hover { background: #0056b3; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; background: #f8f9fa; border: 1px solid #dee2e6; }
+        .code { background: #f4f4f4; padding: 10px; border-radius: 4px; margin: 10px 0; font-family: monospace; font-size: 12px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Verificador Firebase</h1>
+        <p style="color: #666; margin-bottom: 20px;">Clique no botão para verificar se tudo está configurado corretamente.</p>
+        
+        <button class="test-btn" onclick="runChecks()">Executar Verificação</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        window.runChecks = async function() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Verificando...</p>';
+            
+            const checks = [];
+
+            // Check 1: Firebase Config File
+            try {
+                const response = await fetch('./assets/js/firebase-config.js');
+                const text = await response.text();
+                
+                const hasApiKey = text.includes('apiKey:') && !text.includes('YOUR_API_KEY');
+                const hasProjectId = text.includes('projectId:') && !text.includes('YOUR_PROJECT_ID');
+                
+                checks.push({
+                    name: 'Arquivo firebase-config.js',
+                    status: hasApiKey && hasProjectId ? 'success' : 'error',
+                    message: hasApiKey && hasProjectId ? 'Credenciais parecem estar preenchidas' : 'Credenciais não encontradas ou ainda com placeholders'
+                });
+            } catch (e) {
+                checks.push({
+                    name: 'Arquivo firebase-config.js',
+                    status: 'error',
+                    message: 'Arquivo não encontrado: ' + e.message
+                });
+            }
+
+            // Check 2: Firebase SDK
+            try {
+                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js');
+                checks.push({
+                    name: 'Firebase SDK (Firebase App)',
+                    status: 'success',
+                    message: 'SDK carregado com sucesso'
+                });
+            } catch (e) {
+                checks.push({
+                    name: 'Firebase SDK (Firebase App)',
+                    status: 'error',
+                    message: 'Erro ao carregar SDK: ' + e.message
+                });
+            }
+
+            // Check 3: Firestore SDK
+            try {
+                const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js');
+                checks.push({
+                    name: 'Firebase SDK (Firestore)',
+                    status: 'success',
+                    message: 'Firestore SDK carregado com sucesso'
+                });
+            } catch (e) {
+                checks.push({
+                    name: 'Firebase SDK (Firestore)',
+                    status: 'error',
+                    message: 'Erro ao carregar Firestore: ' + e.message
+                });
+            }
+
+            // Check 4: Try to import and test
+            try {
+                const { saveContact } = await import('./assets/js/firebase-config.js');
+                checks.push({
+                    name: 'Importação do módulo Firebase',
+                    status: 'success',
+                    message: 'Módulo importado corretamente'
+                });
+            } catch (e) {
+                checks.push({
+                    name: 'Importação do módulo Firebase',
+                    status: 'error',
+                    message: 'Erro: ' + e.message
+                });
+            }
+
+            // Check 5: Network connectivity
+            try {
+                const response = await fetch('https://api.ipify.org?format=json', { 
+                    signal: AbortSignal.timeout(5000) 
+                });
+                if (response.ok) {
+                    checks.push({
+                        name: 'Conexão Internet',
+                        status: 'success',
+                        message: 'Conexão funcionando'
+                    });
+                } else {
+                    checks.push({
+                        name: 'Conexão Internet',
+                        status: 'warning',
+                        message: 'Resposta não é OK: ' + response.status
+                    });
+                }
+            } catch (e) {
+                checks.push({
+                    name: 'Conexão Internet',
+                    status: 'error',
+                    message: 'Erro: ' + e.message
+                });
+            }
+
+            // Render results
+            let html = '';
+            for (const check of checks) {
+                const statusClass = check.status === 'success' ? 'ok' : check.status === 'error' ? 'fail' : 'warn';
+                const statusText = check.status === 'success' ? '✓' : check.status === 'error' ? '✗' : '⚠';
+                
+                html += `
+                    <div class="check-item ${check.status}">
+                        <h3>${check.name} <span class="status ${statusClass}">${statusText}</span></h3>
+                        <p>${check.message}</p>
+                    </div>
+                `;
+            }
+
+            // Summary
+            const errors = checks.filter(c => c.status === 'error').length;
+            const warnings = checks.filter(c => c.status === 'warning').length;
+            const successes = checks.filter(c => c.status === 'success').length;
+
+            html += `
+                <div class="result">
+                    <h3>Resumo</h3>
+                    <p>✓ Sucessos: ${successes}</p>
+                    <p>⚠ Avisos: ${warnings}</p>
+                    <p>✗ Erros: ${errors}</p>
+                </div>
+            `;
+
+            if (errors === 0 && warnings === 0) {
+                html += `
+                    <div class="result" style="background: #f0f9f1; border-color: #28a745;">
+                        <h3 style="color: #28a745;">🎉 Tudo Parece Estar Configurado!</h3>
+                        <p>Agora teste enviando um contato em <a href="/contato.html" style="color: #007bff;">contato.html</a></p>
+                        <p>Se receber um erro, abra o console (F12) e procure por mensagens de erro.</p>
+                    </div>
+                `;
+            } else if (errors > 0) {
+                html += `
+                    <div class="result" style="background: #f8f1f2; border-color: #dc3545;">
+                        <h3 style="color: #dc3545;">❌ Problemas Encontrados</h3>
+                        <p>Verifique os erros acima. Leia o arquivo <strong>FIREBASE-DEBUG.md</strong> para soluções.</p>
+                    </div>
+                `;
+            }
+
+            resultsDiv.innerHTML = html;
+        };
+    </script>
+</body>
+</html>

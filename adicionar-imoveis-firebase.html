@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Imóveis ao Firebase</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .status.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        button {
+            background: #1976d2;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin: 0.5rem;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .properties-list {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .property-card {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .property-card h3 {
+            color: #1976d2;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-card p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: width 0.3s;
+        }
+
+        .log {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .log-entry {
+            margin: 0.5rem 0;
+        }
+
+        .log-success {
+            color: #4caf50;
+        }
+
+        .log-error {
+            color: #d32f2f;
+        }
+
+        .log-info {
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Adicionar Imóveis ao Firebase</h1>
+        <p>Clique no botão abaixo para adicionar os imóveis pré-configurados ao Firebase.</p>
+
+        <div>
+            <button onclick="addProperties()" id="addBtn">
+                <i class="fas fa-upload"></i> Adicionar Imóveis ao Firebase
+            </button>
+            <button onclick="checkProperties()" id="checkBtn">
+                <i class="fas fa-search"></i> Verificar Imóveis
+            </button>
+            <button onclick="clearLog()">
+                <i class="fas fa-trash"></i> Limpar Log
+            </button>
+        </div>
+
+        <div id="status"></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill">0%</div>
+        </div>
+        <div class="log" id="log"></div>
+        <div class="properties-list" id="propertiesList"></div>
+    </div>
+
+    <script type="module">
+        console.log("✓ Script iniciado");
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            getDocs,
+            serverTimestamp,
+            query,
+            orderBy,
+            disableNetwork,
+            enableNetwork
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        console.log("✓ Firebase modules importados com sucesso");
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
+
+        // Initialize Firebase
+        console.log("Iniciando Firebase com config:", firebaseConfig.projectId);
+        const app = initializeApp(firebaseConfig);
+        console.log("✓ Firebase app inicializado");
+        
+        const db = getFirestore(app);
+        console.log("✓ Firestore obtido");
+
+        // Imóveis para adicionar
+        const propertiesToAdd = [
+            {
+                title: "Casa no Condomínio Villaredo",
+                price: 560000,
+                location: "Barra dos Coqueiros, Aracaju - SE",
+                bedrooms: 3,
+                bathrooms: 2,
+                area: 130,
+                description: "Bela casa em condomínio fechado com excelente localização. Possui 3 quartos, 2 banheiros e 130m² de área útil. Ideal para família que busca segurança e conforto.",
+                image: "https://images.unsplash.com/photo-1570129477492-45a003537e1f?q=80&w=800&auto=format&fit=crop",
+                exclusive: true
+            },
+            {
+                title: "Casa de Alto Padrão no Condomínio Morada do Rio",
+                price: 3500000,
+                location: "São José dos Náufragos, Aracaju - SE",
+                bedrooms: 5,
+                bathrooms: 7,
+                area: 800,
+                description: "Mansão de luxo em condomínio exclusivo à beira do rio. Dispõe de 5 suítes, 7 banheiros completos, piscina, sauna, academia e área de lazer privativa. Perfeita para executivos.",
+                image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=800&auto=format&fit=crop",
+                exclusive: false
+            },
+            {
+                title: "Apartamento VILLA CRISTINA",
+                price: 370000,
+                location: "Centro, Aracaju - SE",
+                bedrooms: 3,
+                bathrooms: 3,
+                area: 110,
+                description: "Apartamento moderno e bem localizado no Centro. 3 quartos, 3 banheiros, varanda com vista para a cidade e vaga de garagem. Ótima opção de investimento.",
+                image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop",
+                exclusive: false
+            },
+            {
+                title: "Casa 3/4 no Villa dos Bosques",
+                price: 680000,
+                location: "Rua Angélica das Chagas Santos, Aruana, Aracaju - SE",
+                bedrooms: 3,
+                bathrooms: 2,
+                area: 300,
+                description: "Casa espaçosa no bairro Aruana com ótima estrutura. 3 quartos, 2 banheiros, garagem e área extensa para projetos. Localização tranquila e segura.",
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
+                exclusive: true
+            }
+        ];
+
+        // Função para adicionar log
+        function addLog(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            entry.textContent = `[${timestamp}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Função para limpar log
+        window.clearLog = function() {
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('status').innerHTML = '';
+        };
+
+        // Função para atualizar progresso
+        function updateProgress(current, total) {
+            const percentage = Math.round((current / total) * 100);
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '%';
+        }
+
+        // Função para adicionar imóveis
+        window.addProperties = async function() {
+            const addBtn = document.getElementById('addBtn');
+            const statusDiv = document.getElementById('status');
+            
+            addBtn.disabled = true;
+            statusDiv.innerHTML = '<div class="status loading"><i class="fas fa-spinner fa-spin"></i> Processando...</div>';
+            
+            try {
+                addLog('🚀 Iniciando adição de imóveis...', 'info');
+                
+                let successCount = 0;
+                const total = propertiesToAdd.length;
+
+                for (let i = 0; i < propertiesToAdd.length; i++) {
+                    const property = propertiesToAdd[i];
+                    
+                    try {
+                        console.log(`Adicionando: ${property.title}`);
+                        const docRef = await addDoc(collection(db, "properties"), {
+                            ...property,
+                            createdAt: serverTimestamp()
+                        });
+                        
+                        console.log(`✓ Adicionado com sucesso: ${docRef.id}`);
+                        addLog(`✓ Adicionado: ${property.title} (ID: ${docRef.id})`, 'success');
+                        successCount++;
+                        updateProgress(i + 1, total);
+                    } catch (error) {
+                        console.error(`✗ Erro ao adicionar ${property.title}:`, error);
+                        addLog(`✗ Erro ao adicionar ${property.title}: ${error.code} - ${error.message}`, 'error');
+                    }
+                }
+
+                if (successCount === total) {
+                    statusDiv.innerHTML = `<div class="status success"><i class="fas fa-check-circle"></i> Todos os ${total} imóvel(is) foram adicionados com sucesso!</div>`;
+                    addLog(`✓ Processo concluído: ${successCount}/${total} imóveis adicionados`, 'success');
+                } else {
+                    statusDiv.innerHTML = `<div class="status error"><i class="fas fa-exclamation-circle"></i> Completado com ${total - successCount} erro(s). ${successCount}/${total} adicionados.</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error"><i class="fas fa-exclamation-circle"></i> Erro: ${error.message}</div>`;
+                addLog(`✗ Erro geral: ${error.message}`, 'error');
+            } finally {
+                addBtn.disabled = false;
+            }
+        };
+
+        // Função para verificar imóveis
+        window.checkProperties = async function() {
+            const statusDiv = document.getElementById('status');
+            const listDiv = document.getElementById('propertiesList');
+            
+            statusDiv.innerHTML = '<div class="status loading"><i class="fas fa-spinner fa-spin"></i> Buscando imóveis...</div>';
+            listDiv.innerHTML = '';
+            
+            try {
+                addLog('🔍 Verificando imóveis no Firebase...', 'info');
+                
+                const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    statusDiv.innerHTML = '<div class="status error">Nenhum imóvel encontrado no Firebase</div>';
+                    addLog('⚠️ Nenhum imóvel encontrado', 'error');
+                    return;
+                }
+
+                const count = querySnapshot.size;
+                statusDiv.innerHTML = `<div class="status success"><i class="fas fa-check-circle"></i> ${count} imóvel(is) encontrado(s) no Firebase</div>`;
+                addLog(`✓ Total de imóveis: ${count}`, 'success');
+
+                querySnapshot.forEach((doc) => {
+                    const property = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'property-card';
+                    card.innerHTML = `
+                        <h3>${property.title}</h3>
+                        <p><strong>Preço:</strong> R$ ${new Intl.NumberFormat('pt-BR').format(property.price)}</p>
+                        <p><strong>Localização:</strong> ${property.location}</p>
+                        <p><strong>Quartos:</strong> ${property.bedrooms}</p>
+                        <p><strong>Banheiros:</strong> ${property.bathrooms}</p>
+                        <p><strong>Área:</strong> ${property.area}m²</p>
+                        <p><strong>ID:</strong> <code>${doc.id}</code></p>
+                        <p><strong>Exclusivo:</strong> ${property.exclusive ? '✓ Sim' : '✗ Não'}</p>
+                    `;
+                    listDiv.appendChild(card);
+                });
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error"><i class="fas fa-exclamation-circle"></i> Erro: ${error.message}</div>`;
+                addLog(`✗ Erro: ${error.message}`, 'error');
+            }
+        };
+    </script>
+</body>
+</html>

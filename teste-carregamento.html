@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Carregamento de Imóveis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .property-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .property-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .property-card p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .property-card .price {
+            color: #C9A227;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        button {
+            background: #C9A227;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 5px;
+        }
+        button:hover {
+            background: #a68a1f;
+        }
+        .log-container {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .log-entry {
+            margin: 3px 0;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Teste de Carregamento de Imóveis Firebase</h1>
+        
+        <div id="statusContainer"></div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="testarConexao()">1. Testar Conexão Firebase</button>
+            <button onclick="listarImoveis()">2. Listar Imóveis</button>
+            <button onclick="adicionarTestAuto()">3. Criar Imóvel de Teste</button>
+            <button onclick="limparLogs()">Limpar Logs</button>
+        </div>
+
+        <div id="propertiesContainer" class="properties-grid"></div>
+
+        <h3>Logs do Console:</h3>
+        <div class="log-container" id="logContainer"></div>
+    </div>
+
+    <script type="module">
+        import { 
+            initializeApp 
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            query,
+            orderBy,
+            addDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
+
+        let db;
+        let app;
+
+        function addLog(message, type = "info") {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            entry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        function addStatus(message, type = "info") {
+            const container = document.getElementById('statusContainer');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            container.appendChild(statusDiv);
+        }
+
+        window.testarConexao = async () => {
+            try {
+                addLog("Inicializando Firebase...");
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                addLog("✓ Firebase inicializado com sucesso!", "success");
+                addStatus("✓ Conexão com Firebase OK", "success");
+            } catch (error) {
+                addLog(`✗ Erro: ${error.message}`, "error");
+                addStatus(`✗ Erro ao conectar: ${error.message}`, "error");
+            }
+        };
+
+        window.listarImoveis = async () => {
+            if (!db) {
+                addStatus("Primeiro execute o teste de conexão", "warning");
+                return;
+            }
+
+            try {
+                addLog("Buscando imóveis...");
+                
+                const q = query(collection(db, 'properties'), orderBy('createdAt', 'desc'));
+                const snapshot = await getDocs(q);
+                
+                addLog(`✓ ${snapshot.size} imóvel(is) encontrado(s)`);
+                
+                if (snapshot.size === 0) {
+                    addStatus("⚠️ Nenhum imóvel na collection 'properties'", "warning");
+                    addLog("Dica: Crie um imóvel pelo painel-admin.html primeiro");
+                } else {
+                    addStatus(`✓ ${snapshot.size} imóvel(is) carregado(s)`, "success");
+                }
+
+                const container = document.getElementById('propertiesContainer');
+                container.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    const property = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'property-card';
+                    card.innerHTML = `
+                        <h3>${property.title}</h3>
+                        <p><strong>Localização:</strong> ${property.location}</p>
+                        <p class="price">R$ ${new Intl.NumberFormat('pt-BR').format(property.price)}</p>
+                        <p><strong>Quartos:</strong> ${property.bedrooms} | <strong>Banheiros:</strong> ${property.bathrooms}</p>
+                        <p><strong>Área:</strong> ${property.area}m²</p>
+                        <p><strong>ID:</strong> ${doc.id}</p>
+                    `;
+                    container.appendChild(card);
+                    addLog(`✓ Imóvel carregado: ${property.title}`);
+                });
+
+            } catch (error) {
+                addLog(`✗ Erro ao buscar imóveis: ${error.message}`, "error");
+                addStatus(`✗ Erro: ${error.message}`, "error");
+            }
+        };
+
+        window.adicionarTestAuto = async () => {
+            if (!db) {
+                addStatus("Primeiro execute o teste de conexão", "warning");
+                return;
+            }
+
+            try {
+                addLog("Criando imóvel de teste...");
+                
+                const testProperty = {
+                    title: "Imóvel de Teste - " + new Date().toLocaleTimeString(),
+                    price: 500000,
+                    location: "Aracaju - SE",
+                    type: "casa",
+                    bedrooms: 3,
+                    bathrooms: 2,
+                    area: 150,
+                    garage: 1,
+                    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop",
+                    description: "Imóvel de teste criado automaticamente",
+                    exclusive: false,
+                    createdAt: serverTimestamp()
+                };
+
+                const docRef = await addDoc(collection(db, 'properties'), testProperty);
+                addLog(`✓ Imóvel criado com ID: ${docRef.id}`);
+                addStatus("✓ Imóvel de teste criado! Clique em 'Listar Imóveis'", "success");
+
+            } catch (error) {
+                addLog(`✗ Erro ao criar: ${error.message}`, "error");
+                addStatus(`✗ Erro: ${error.message}`, "error");
+            }
+        };
+
+        window.limparLogs = () => {
+            document.getElementById('logContainer').innerHTML = '';
+            addLog("Logs limpos");
+        };
+
+        // Inicializa automaticamente
+        addLog("Página carregada. Clique nos botões para testar.");
+        addStatus("👉 Clique em '1. Testar Conexão Firebase' para começar", "info");
+    </script>
+</body>
+</html>

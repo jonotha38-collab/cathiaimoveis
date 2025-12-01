@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #C9A227;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #a68a1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste de Conexão Firebase</h1>
+        
+        <div id="testResults"></div>
+
+        <h2>Criar usuário de teste:</h2>
+        <input type="email" id="testEmail" placeholder="Email" value="admin@cathia.com">
+        <input type="password" id="testPassword" placeholder="Senha" value="">
+        <button onclick="criarUsuario()">Criar Usuário</button>
+        <button onclick="testarLogin()">Testar Login</button>
+        <button onclick="verificarAuth()">Verificar Auth</button>
+
+        <h2>Logs do Console:</h2>
+        <div id="consoleLogs" style="background: #1e1e1e; color: #00ff00; padding: 10px; border-radius: 4px; min-height: 200px; font-family: monospace; font-size: 12px; overflow-y: auto; max-height: 300px;"></div>
+    </div>
+
+    <script type="module">
+        import { 
+            initializeApp 
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
+
+        let auth;
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            addLog("✓ Firebase inicializado com sucesso!", "success");
+        } catch (error) {
+            addLog("✗ Erro ao inicializar Firebase: " + error.message, "error");
+        }
+
+        function addLog(message, type = "info") {
+            const logsDiv = document.getElementById('consoleLogs');
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logsDiv.appendChild(logEntry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(message);
+        }
+
+        window.criarUsuario = async () => {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            if (!email || !password) {
+                addLog("✗ Preencha email e senha", "error");
+                return;
+            }
+
+            try {
+                addLog(`Criando usuário: ${email}...`);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                addLog(`✓ Usuário criado com sucesso! UID: ${userCredential.user.uid}`, "success");
+            } catch (error) {
+                addLog(`✗ Erro ao criar usuário: ${error.code} - ${error.message}`, "error");
+            }
+        };
+
+        window.testarLogin = async () => {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            if (!email || !password) {
+                addLog("✗ Preencha email e senha", "error");
+                return;
+            }
+
+            try {
+                addLog(`Tentando fazer login: ${email}...`);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                addLog(`✓ Login bem-sucedido! UID: ${userCredential.user.uid}`, "success");
+                addLog(`Usuário logado: ${userCredential.user.email}`);
+            } catch (error) {
+                addLog(`✗ Erro no login: ${error.code} - ${error.message}`, "error");
+            }
+        };
+
+        window.verificarAuth = async () => {
+            const user = auth.currentUser;
+            if (user) {
+                addLog(`✓ Usuário logado: ${user.email}`, "success");
+            } else {
+                addLog("ℹ Nenhum usuário logado", "info");
+            }
+        };
+
+        // Log inicial
+        addLog("Página de teste carregada");
+        addLog(`Projeto Firebase: cathia-31ee5`);
+    </script>
+</body>
+</html>
