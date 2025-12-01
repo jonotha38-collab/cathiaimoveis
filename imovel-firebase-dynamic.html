@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando imóvel...</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-size: 1.2rem;
+            color: #666;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #C9A227;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 10 45 L 50 10 L 90 45" />
+                    <path d="M 20 36 V 90 H 80 V 36" />
+                    <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                    <path d="M 50 75 V 90" />
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-title">CATHIA AGUIAR</span>
+                    <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                    <span class="logo-creci">CRECI 1743</span>
+                </div>
+            </a>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="imoveis.html">Imóveis</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="contato.html">Contato</a>
+                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading -->
+    <div id="contentContainer">
+        <div class="loading">
+            <div class="spinner"></div>
+            Carregando imóvel...
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="footerContainer" style="display: none;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo-container">
+                        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M 10 45 L 50 10 L 90 45" />
+                            <path d="M 20 36 V 90 H 80 V 36" />
+                            <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                            <path d="M 50 75 V 90" />
+                        </svg>
+                        <div class="logo-text">
+                            <span class="logo-title">CATHIA AGUIAR</span>
+                            <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                            <span class="logo-creci">CRECI 1743</span>
+                        </div>
+                    </a>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Excelência em intermediação imobiliária de residências de médio e alto padrão.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Navegação</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="imoveis.html">Imóveis</a></li>
+                        <li><a href="sobre.html">Sobre Nós</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone" style="color: var(--color-accent); margin-right: 8px;"></i> +55 79 99812-9141</li>
+                        <li><i class="fas fa-envelope" style="color: var(--color-accent); margin-right: 8px;"></i> cathiaaguiar@hotmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Cathia Aguiar - Corretora de Imóveis. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+
+    <script type="module">
+        import { 
+            initializeApp 
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Extrai ID do imóvel da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        let propertyId = urlParams.get('id');
+
+        // Alternativa: extrai do nome do arquivo
+        if (!propertyId) {
+            const filename = window.location.pathname.split('/').pop();
+            const match = filename.match(/imovel-firebase-(.+)\.html/);
+            if (match) {
+                propertyId = match[1];
+            }
+        }
+
+        if (!propertyId) {
+            document.getElementById('contentContainer').innerHTML = `
+                <div class="container" style="padding-top: 2rem; text-align: center;">
+                    <p>Imóvel não encontrado</p>
+                    <a href="imoveis.html" class="btn" style="margin-top: 1rem;">Voltar para Imóveis</a>
+                </div>
+            `;
+            return;
+        }
+
+        // Carrega o imóvel do Firebase
+        async function loadProperty() {
+            try {
+                const docRef = doc(db, "properties", propertyId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const property = docSnap.data();
+                    renderProperty(property);
+                } else {
+                    document.getElementById('contentContainer').innerHTML = `
+                        <div class="container" style="padding-top: 2rem; text-align: center;">
+                            <p>Imóvel não encontrado</p>
+                            <a href="imoveis.html" class="btn" style="margin-top: 1rem;">Voltar para Imóveis</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar imóvel:', error);
+                document.getElementById('contentContainer').innerHTML = `
+                    <div class="container" style="padding-top: 2rem; text-align: center;">
+                        <p>Erro ao carregar o imóvel</p>
+                        <a href="imoveis.html" class="btn" style="margin-top: 1rem;">Voltar para Imóveis</a>
+                    </div>
+                `;
+            }
+        }
+
+        function renderProperty(property) {
+            const container = document.getElementById('contentContainer');
+            
+            const html = `
+                <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+                    <!-- Galeria -->
+                    <section class="property-gallery fade-in">
+                        <img id="mainImage" class="main-image" src="${property.image}" alt="${property.title}">
+                        <div class="thumbs" id="thumbnails">
+                            <img src="${property.image}" alt="Imagem principal" class="thumb active" onclick="changeImage(this)">
+                        </div>
+                    </section>
+
+                    <!-- Detalhes -->
+                    <section class="property-details-grid fade-in">
+                        <!-- Coluna Esquerda -->
+                        <div>
+                            <h1>${property.title}</h1>
+                            <p style="color: var(--color-text-light); font-size: 1.1rem; margin-bottom: 2rem;">
+                                <i class="fas fa-map-marker-alt" style="color: var(--color-accent); margin-right: 8px;"></i>
+                                ${property.location}
+                            </p>
+
+                            <p style="color: var(--color-accent); font-size: 2.2rem; font-weight: 600; margin-bottom: 2rem;">
+                                R$ ${new Intl.NumberFormat('pt-BR').format(property.price)}
+                            </p>
+
+                            <!-- Amenidades -->
+                            <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">Características</h3>
+                            <div class="amenities-table">
+                                <div class="amenity-item">
+                                    <i class="fas fa-bed amenity-icon"></i>
+                                    <strong>${property.bedrooms} Quartos</strong>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-bath amenity-icon"></i>
+                                    <strong>${property.bathrooms} Banheiros</strong>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-car amenity-icon"></i>
+                                    <strong>${property.garage || 1} Vagas</strong>
+                                </div>
+                                <div class="amenity-item">
+                                    <i class="fas fa-ruler-combined amenity-icon"></i>
+                                    <strong>${property.area} m²</strong>
+                                </div>
+                            </div>
+
+                            <!-- Descrição -->
+                            <h3 style="color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem;">Descrição</h3>
+                            <p style="color: var(--color-text-light); line-height: 1.8;">
+                                ${property.description}
+                            </p>
+
+                            <!-- Chamada para Ação -->
+                            <div style="display: flex; gap: 1rem; margin-top: 3rem; flex-wrap: wrap;">
+                                <a href="https://wa.me/5579998129141?text=Olá! Tenho interesse no imóvel ${encodeURIComponent(property.title)}"
+                                   target="_blank" 
+                                   class="btn" 
+                                   style="flex: 1;">
+                                    <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> WhatsApp
+                                </a>
+                                <a href="contato.html" class="btn-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-primary); gap: 8px; text-decoration: none;">
+                                    <i class="fas fa-envelope"></i> Contato
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Coluna Direita - Card de Contato -->
+                        <div>
+                            <div class="contact-card fade-in">
+                                <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">Solicite uma Visita</h3>
+                                
+                                <form id="visitForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <input type="text" placeholder="Seu Nome" class="form-control" required>
+                                    <input type="email" placeholder="Seu E-mail" class="form-control" required>
+                                    <input type="tel" placeholder="Seu Telefone" class="form-control" required>
+                                    <textarea placeholder="Mensagem (opcional)" class="form-control" rows="4"></textarea>
+                                    <button type="submit" class="btn" style="width: 100%;">Agendar Visita</button>
+                                </form>
+
+                                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                    <p style="color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                                        Ou entre em contato diretamente:
+                                    </p>
+                                    <p style="color: var(--color-accent); font-weight: 600; font-size: 1.2rem;">
+                                        +55 79 99812-9141
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            document.getElementById('footerContainer').style.display = 'block';
+
+            // Atualiza o título da página
+            document.title = `${property.title} | Cathia Aguiar - Corretora de Imóveis`;
+
+            // Adiciona evento ao formulário
+            document.getElementById('visitForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Formulário enviado! Entraremos em contato em breve.');
+                e.target.reset();
+            });
+        }
+
+        // Carrega o imóvel quando a página estiver pronta
+        loadProperty();
+    </script>
+</body>
+</html>

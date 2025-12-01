@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração | Cathia Aguiar</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #1a1a1a;
+            --color-accent: #C9A227;
+            --color-text-light: #666;
+            --border-light: #eee;
+            --bg-light: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--color-primary);
+        }
+
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--color-primary);
+            color: white;
+            padding: 2rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--color-accent);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .logout-btn {
+            position: absolute;
+            bottom: 2rem;
+            left: 1rem;
+            right: 1rem;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--color-primary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #a68a1f;
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-light);
+        }
+
+        /* Properties Table */
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-light);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        .property-name {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .property-price {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--color-accent);
+            font-size: 1.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .logout-btn {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.7rem;
+            }
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .grid-form .form-group:last-child {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            .grid-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-light);
+        }
+
+        .spinner {
+            border: 3px solid var(--border-light);
+            border-top: 3px solid var(--color-accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <h1>PAINEL ADMIN</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; justify-content: center;">Entrar</button>
+                <div id="loginError" class="alert alert-error" style="margin-top: 1rem;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display: none;">
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <i class="fas fa-building" style="color: var(--color-accent); margin-right: 0.5rem;"></i>
+                    ADMIN
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="#" data-section="properties" class="menu-item active"><i class="fas fa-list"></i> Meus Imóveis</a></li>
+                    <li><a href="#" data-section="add-property" class="menu-item"><i class="fas fa-plus"></i> Adicionar Imóvel</a></li>
+                    <li><a href="#" data-section="inquiries" class="menu-item"><i class="fas fa-envelope"></i> Consultas</a></li>
+                </ul>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i> Sair</button>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="header">
+                    <h1 id="pageTitle">Meus Imóveis</h1>
+                </div>
+
+                <!-- Alert Messages -->
+                <div id="successAlert" class="alert alert-success"></div>
+                <div id="errorAlert" class="alert alert-error"></div>
+
+                <!-- Properties List Section -->
+                <section id="properties" class="section active">
+                    <div style="margin-bottom: 1.5rem;">
+                        <a href="#" data-section="add-property" class="btn menu-item">
+                            <i class="fas fa-plus"></i> Novo Imóvel
+                        </a>
+                    </div>
+                    <div class="table-container">
+                        <table id="propertiesTable">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Localização</th>
+                                    <th>Preço</th>
+                                    <th>Quartos</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="propertiesBody">
+                                <tr><td colspan="5" class="loading"><div class="spinner"></div> Carregando imóveis...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Add/Edit Property Section -->
+                <section id="add-property" class="section">
+                    <form id="propertyForm" style="background: white; padding: 2rem; border-radius: 8px;">
+                        <div class="grid-form">
+                            <div class="form-group">
+                                <label>Nome do Imóvel</label>
+                                <input type="text" id="propertyTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço (R$)</label>
+                                <input type="number" id="propertyPrice" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Localização</label>
+                                <input type="text" id="propertyLocation" placeholder="Ex: Barra dos Coqueiros, Aracaju - SE" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Imóvel</label>
+                                <select id="propertyType" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="casa">Casa</option>
+                                    <option value="apartamento">Apartamento</option>
+                                    <option value="condominio">Condomínio</option>
+                                    <option value="terreno">Terreno</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quartos</label>
+                                <input type="number" id="propertyBedrooms" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Banheiros</label>
+                                <input type="number" id="propertyBathrooms" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Área (m²)</label>
+                                <input type="number" id="propertyArea" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vagas de Garagem</label>
+                                <input type="number" id="propertyGarage" min="0" value="1">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>URL da Imagem Principal</label>
+                                <input type="url" id="propertyImage" placeholder="https://exemplo.com/imagem.jpg" required>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Descrição</label>
+                                <textarea id="propertyDescription" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="propertyExclusive"> Exclusivo
+                                </label>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i> Salvar Imóvel
+                            </button>
+                            <a href="#" data-section="properties" class="btn btn-secondary menu-item" style="margin-left: auto;">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            <button type="button" class="btn btn-danger" id="deletePropertyBtn" style="display: none;">
+                                <i class="fas fa-trash"></i> Deletar
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Inquiries Section -->
+                <section id="inquiries" class="section">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefone</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inquiriesBody">
+                                <tr><td colspan="5" class="loading"><div class="spinner"></div> Carregando consultas...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            auth, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from './assets/js/admin-auth.js';
+        import { 
+            addProperty, 
+            updateProperty, 
+            deleteProperty, 
+            getAllProperties 
+        } from './assets/js/admin-properties.js';
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const loginScreen = document.getElementById('loginScreen');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        let currentUser = null;
+        let editingPropertyId = null;
+
+        // Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadProperties();
+                loadInquiries();
+            } else {
+                currentUser = null;
+                loginScreen.style.display = 'flex';
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        // Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+            } catch (error) {
+                const errorAlert = document.getElementById('loginError');
+                errorAlert.textContent = 'Email ou senha incorretos';
+                errorAlert.classList.add('active');
+                setTimeout(() => errorAlert.classList.remove('active'), 3000);
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = item.getAttribute('data-section');
+                if (sectionId === 'add-property') {
+                    resetForm();
+                    editingPropertyId = null;
+                }
+                switchSection(sectionId);
+            });
+        });
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+            const titles = {
+                'properties': 'Meus Imóveis',
+                'add-property': 'Adicionar/Editar Imóvel',
+                'inquiries': 'Consultas Recebidas'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Painel Admin';
+        }
+
+        // Load Properties
+        async function loadProperties() {
+            const result = await getAllProperties();
+            const tbody = document.getElementById('propertiesBody');
+            
+            if (result.success && result.data.length > 0) {
+                tbody.innerHTML = result.data.map(prop => `
+                    <tr>
+                        <td class="property-name">${prop.title}</td>
+                        <td>${prop.location}</td>
+                        <td class="property-price">R$ ${new Intl.NumberFormat('pt-BR').format(prop.price)}</td>
+                        <td>${prop.bedrooms}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-small" onclick="editProperty('${prop.id}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="deletePropertyFunc('${prop.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-light);">Nenhum imóvel cadastrado</td></tr>';
+            }
+        }
+
+        // Property Form
+        document.getElementById('propertyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const propertyData = {
+                title: document.getElementById('propertyTitle').value,
+                price: parseInt(document.getElementById('propertyPrice').value),
+                location: document.getElementById('propertyLocation').value,
+                type: document.getElementById('propertyType').value,
+                bedrooms: parseInt(document.getElementById('propertyBedrooms').value),
+                bathrooms: parseInt(document.getElementById('propertyBathrooms').value),
+                area: parseInt(document.getElementById('propertyArea').value),
+                garage: parseInt(document.getElementById('propertyGarage').value) || 1,
+                image: document.getElementById('propertyImage').value,
+                description: document.getElementById('propertyDescription').value,
+                exclusive: document.getElementById('propertyExclusive').checked
+            };
+
+            let result;
+            if (editingPropertyId) {
+                result = await updateProperty(editingPropertyId, propertyData);
+            } else {
+                result = await addProperty(propertyData);
+            }
+
+            if (result.success) {
+                showAlert('success', editingPropertyId ? 'Imóvel atualizado com sucesso!' : 'Imóvel adicionado com sucesso!');
+                resetForm();
+                editingPropertyId = null;
+                setTimeout(() => {
+                    loadProperties();
+                    switchSection('properties');
+                }, 1000);
+            } else {
+                showAlert('error', 'Erro ao salvar imóvel: ' + result.error);
+            }
+        });
+
+        window.editProperty = async (id) => {
+            const result = await getAllProperties();
+            const property = result.data.find(p => p.id === id);
+            
+            if (property) {
+                editingPropertyId = id;
+                document.getElementById('propertyTitle').value = property.title;
+                document.getElementById('propertyPrice').value = property.price;
+                document.getElementById('propertyLocation').value = property.location;
+                document.getElementById('propertyType').value = property.type || '';
+                document.getElementById('propertyBedrooms').value = property.bedrooms;
+                document.getElementById('propertyBathrooms').value = property.bathrooms;
+                document.getElementById('propertyArea').value = property.area;
+                document.getElementById('propertyGarage').value = property.garage || 1;
+                document.getElementById('propertyImage').value = property.image;
+                document.getElementById('propertyDescription').value = property.description;
+                document.getElementById('propertyExclusive').checked = property.exclusive || false;
+                
+                document.getElementById('deletePropertyBtn').style.display = 'block';
+                switchSection('add-property');
+                document.getElementById('pageTitle').textContent = 'Editar Imóvel';
+            }
+        };
+
+        window.deletePropertyFunc = async (id) => {
+            if (confirm('Tem certeza que deseja deletar este imóvel?')) {
+                const result = await deleteProperty(id);
+                if (result.success) {
+                    showAlert('success', 'Imóvel deletado com sucesso!');
+                    loadProperties();
+                } else {
+                    showAlert('error', 'Erro ao deletar: ' + result.error);
+                }
+            }
+        };
+
+        document.getElementById('deletePropertyBtn').addEventListener('click', async () => {
+            if (editingPropertyId && confirm('Tem certeza que deseja deletar este imóvel?')) {
+                const result = await deleteProperty(editingPropertyId);
+                if (result.success) {
+                    showAlert('success', 'Imóvel deletado com sucesso!');
+                    resetForm();
+                    editingPropertyId = null;
+                    setTimeout(() => {
+                        loadProperties();
+                        switchSection('properties');
+                    }, 1000);
+                } else {
+                    showAlert('error', 'Erro ao deletar: ' + result.error);
+                }
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('propertyForm').reset();
+            document.getElementById('deletePropertyBtn').style.display = 'none';
+            editingPropertyId = null;
+        }
+
+        // Load Inquiries
+        async function loadInquiries() {
+            const db = getFirestore();
+            const tbody = document.getElementById('inquiriesBody');
+
+            try {
+                const contactsSnapshot = await getDocs(collection(db, 'contacts'));
+                const inquiriesSnapshot = await getDocs(collection(db, 'property_inquiries'));
+                
+                let allInquiries = [];
+
+                contactsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    allInquiries.push({
+                        type: 'Contato',
+                        name: data.name,
+                        email: data.email,
+                        phone: data.phone,
+                        date: data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('pt-BR') : 'N/A'
+                    });
+                });
+
+                inquiriesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    allInquiries.push({
+                        type: 'Inquérito',
+                        name: data.propertyName || 'N/A',
+                        email: data.email || 'N/A',
+                        phone: data.phone || 'N/A',
+                        date: data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('pt-BR') : 'N/A'
+                    });
+                });
+
+                if (allInquiries.length > 0) {
+                    tbody.innerHTML = allInquiries.map(inq => `
+                        <tr>
+                            <td>${inq.type}</td>
+                            <td>${inq.name}</td>
+                            <td>${inq.email}</td>
+                            <td>${inq.phone}</td>
+                            <td>${inq.date}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-text-light);">Nenhuma consulta recebida</td></tr>';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar inquéritos:', error);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #e74c3c;">Erro ao carregar dados</td></tr>';
+            }
+        }
+
+        function showAlert(type, message) {
+            const alertId = type === 'success' ? 'successAlert' : 'errorAlert';
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.classList.add('active');
+            setTimeout(() => alert.classList.remove('active'), 4000);
+        }
+    </script>
+</body>
+</html>

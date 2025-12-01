@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Firestore REST API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 4px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { background: #C9A227; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #a68a1f; }
+        .log { background: #1e1e1e; color: #00ff00; padding: 15px; border-radius: 4px; margin-top: 20px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; }
+        .log-entry { margin: 3px 0; }
+        .property { background: #f9f9f9; padding: 15px; margin: 10px 0; border-left: 4px solid #C9A227; border-radius: 4px; }
+        .property h3 { margin: 0 0 10px 0; color: #333; }
+        .property p { margin: 5px 0; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug - Firestore REST API</h1>
+        
+        <div id="statusContainer"></div>
+
+        <div>
+            <button onclick="listarImoveis()">1. Listar Imóveis (REST API)</button>
+            <button onclick="verificarPermissoes()">2. Verificar Permissões</button>
+            <button onclick="limparLogs()">Limpar Logs</button>
+        </div>
+
+        <div id="propertiesContainer"></div>
+
+        <h3>Log:</h3>
+        <div class="log" id="logContainer"></div>
+    </div>
+
+    <script>
+        const FIREBASE_PROJECT = "cathia-31ee5";
+        const FIRESTORE_REST_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents`;
+        const API_KEY = "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk";
+
+        function addLog(message) {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            entry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        function addStatus(message, type = "info") {
+            const container = document.getElementById('statusContainer');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            container.appendChild(statusDiv);
+        }
+
+        window.listarImoveis = async () => {
+            addLog("Buscando imóveis via REST API...");
+            const container = document.getElementById('propertiesContainer');
+            container.innerHTML = '';
+
+            try {
+                const url = `${FIRESTORE_REST_URL}/properties?key=${API_KEY}`;
+                addLog(`URL: ${url}`);
+
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(`HTTP ${response.status}: ${error.error?.message || 'Erro desconhecido'}`);
+                }
+
+                const data = await response.json();
+                addLog(`✓ Resposta recebida`);
+
+                const documents = data.documents || [];
+                
+                if (documents.length === 0) {
+                    addLog("⚠️ Nenhum imóvel encontrado");
+                    addStatus("⚠️ Collection 'properties' está VAZIA", "error");
+                    addLog("Você precisa adicionar imóveis via painel-admin.html");
+                    return;
+                }
+
+                addStatus(`✓ ${documents.length} imóvel(is) encontrado(s)!`, "success");
+                addLog(`✓ Total: ${documents.length} imóvel(is)`);
+
+                documents.forEach((doc, index) => {
+                    try {
+                        // Extrai dados do documento
+                        const fields = doc.fields || {};
+                        const property = {};
+                        
+                        for (const key in fields) {
+                            const field = fields[key];
+                            if (field.stringValue) property[key] = field.stringValue;
+                            else if (field.integerValue) property[key] = parseInt(field.integerValue);
+                            else if (field.doubleValue) property[key] = field.doubleValue;
+                            else if (field.booleanValue) property[key] = field.booleanValue;
+                        }
+
+                        addLog(`✓ Imóvel ${index + 1}: ${property.title}`);
+
+                        const card = document.createElement('div');
+                        card.className = 'property';
+                        card.innerHTML = `
+                            <h3>${property.title || 'Sem título'}</h3>
+                            <p><strong>Preço:</strong> R$ ${property.price || 0}</p>
+                            <p><strong>Localização:</strong> ${property.location || 'N/A'}</p>
+                            <p><strong>Quartos:</strong> ${property.bedrooms || 0} | <strong>Banheiros:</strong> ${property.bathrooms || 0}</p>
+                            <p><strong>Área:</strong> ${property.area || 0}m²</p>
+                            <p><strong>Imagem:</strong> ${property.image ? '✓ Tem imagem' : '✗ Sem imagem'}</p>
+                            <p><strong>Exclusivo:</strong> ${property.exclusive ? 'Sim' : 'Não'}</p>
+                        `;
+                        container.appendChild(card);
+                    } catch (error) {
+                        addLog(`✗ Erro ao processar imóvel: ${error.message}`);
+                    }
+                });
+
+            } catch (error) {
+                addLog(`✗ Erro: ${error.message}`);
+                addStatus(`✗ Erro: ${error.message}`, "error");
+            }
+        };
+
+        window.verificarPermissoes = async () => {
+            addLog("Verificando permissões do Firestore...");
+            
+            try {
+                const url = `${FIRESTORE_REST_URL}/properties?pageSize=1&key=${API_KEY}`;
+                const response = await fetch(url);
+                
+                addLog(`Status HTTP: ${response.status}`);
+
+                if (response.status === 401) {
+                    addStatus("✗ Erro 401: Não autenticado", "error");
+                    addLog("Problema: API Key inválida ou não aceita requisições REST");
+                } else if (response.status === 403) {
+                    addStatus("✗ Erro 403: Permissão negada", "error");
+                    addLog("Solução: Verifique as regras de segurança do Firestore");
+                } else if (response.status === 404) {
+                    addStatus("⚠️ Erro 404: Recurso não encontrado", "error");
+                    addLog("A collection 'properties' não existe ou está vazia");
+                } else if (response.ok) {
+                    addStatus("✓ Permissões OK", "success");
+                    addLog("✓ Firestore acessível");
+                } else {
+                    addStatus(`✗ Erro HTTP ${response.status}`, "error");
+                }
+            } catch (error) {
+                addLog(`✗ Erro de rede: ${error.message}`);
+                addStatus("✗ Erro de rede", "error");
+            }
+        };
+
+        window.limparLogs = () => {
+            document.getElementById('logContainer').innerHTML = '';
+            addLog("Logs limpos");
+        };
+
+        addLog("Página carregada");
+        addStatus("👉 Clique em '1. Listar Imóveis'", "info");
+    </script>
+</body>
+</html>

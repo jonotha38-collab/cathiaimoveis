@@ -23,8 +23,27 @@
 - **Currency**: Format prices as `R$ X.XXX.XXX` (Brazilian Real).
 - **Naming**: Kebab-case for files (`imovel-villa-lobos.html`) and CSS classes (`property-card`).
 
+## Firebase Integration
+- **Status**: Integrated for contact form and property inquiries
+- **Setup**: Follow `GUIA-FIREBASE-RAPIDO.md` for quick setup or `SETUP-FIREBASE.md` for detailed guide
+- **Collections**:
+  - `contacts` - Form submissions from `/contato.html`
+  - `property_inquiries` - Property clicks with button attribute `data-inquiry-btn`
+- **Config File**: `assets/js/firebase-config.js` (must be updated with your Firebase credentials)
+- **Modules**:
+  - `firebase-config.js` - Core Firebase setup and functions
+  - `property-inquiry.js` - Property tracking on individual pages
+- **Features**: Auto-timestamp, IP capture, fallback on error (doesn't block user actions)
+
 ## Workflows
 - **Adding Properties**:
-  1. Create new HTML file from `TEMPLATE-IMOVEL-INDIVIDUAL.html` or copy an existing one.
-  2. Add card entry to `imoveis.html` grid.
-  3. Use "Exclusivo" tag where appropriate.
+  1. Create new HTML file from `TEMPLATE-IMOVEL-FIREBASE.html` (or `TEMPLATE-IMOVEL-INDIVIDUAL.html` if not using Firebase)
+  2. Add inquiry button with `data-inquiry-btn`, `data-property-id`, and `data-property-name` attributes
+  3. Include Firebase property inquiry script: `<script type="module"> import { initPropertyInquiry } from '../assets/js/property-inquiry.js'; initPropertyInquiry(); </script>`
+  4. Add card entry to `imoveis.html` grid.
+  5. Use "Exclusivo" tag where appropriate.
+
+- **Firebase Contact Form Setup** (already done in `contato.html`):
+  - Form data auto-saves to `contacts` collection
+  - Falls back to mailto if Firebase unavailable
+  - No additional setup needed for contact page

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nome do Imóvel | Cathia Aguiar - Corretora de Imóveis</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 10 45 L 50 10 L 90 45" />
+                    <path d="M 20 36 V 90 H 80 V 36" />
+                    <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                    <path d="M 50 75 V 90" />
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-title">CATHIA AGUIAR</span>
+                    <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                    <span class="logo-creci">CRECI 1743</span>
+                </div>
+            </a>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+            <div class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../imoveis.html">Imóveis</a>
+                <a href="../sobre.html">Sobre</a>
+                <a href="../contato.html">Contato</a>
+                <a href="../contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Propriedade -->
+    <div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+        <!-- Galeria -->
+        <section class="property-gallery fade-in">
+            <img id="mainImage" class="main-image" src="../assets/img/imovel-exemplo.jpg" alt="Imóvel">
+            <div class="thumbs" id="thumbnails">
+                <!-- Thumbnails aqui -->
+            </div>
+        </section>
+
+        <!-- Detalhes -->
+        <section class="property-details-grid fade-in">
+            <!-- Coluna Esquerda -->
+            <div>
+                <h1 id="propertyTitle">Nome do Imóvel</h1>
+                <p style="color: var(--color-text-light); font-size: 1.1rem; margin-bottom: 2rem;" id="propertyLocation">
+                    <i class="fas fa-map-marker-alt" style="color: var(--color-accent); margin-right: 8px;"></i>
+                    Localização
+                </p>
+
+                <p style="color: var(--color-accent); font-size: 2.2rem; font-weight: 600; margin-bottom: 2rem;" id="propertyPrice">
+                    R$ 0,00
+                </p>
+
+                <!-- Amenidades -->
+                <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">Características</h3>
+                <div class="amenities-table" id="amenities">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+
+                <!-- Descrição -->
+                <h3 style="color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem;">Descrição</h3>
+                <p id="propertyDescription" style="color: var(--color-text-light); line-height: 1.8;">
+                    Descrição do imóvel vai aqui
+                </p>
+
+                <!-- Chamada para Ação -->
+                <div style="display: flex; gap: 1rem; margin-top: 3rem; flex-wrap: wrap;">
+                    <!-- WhatsApp com rastreamento Firebase -->
+                    <a href="https://wa.me/5579998129141?text=Olá! Tenho interesse no imóvel [NOME DO IMÓVEL]"
+                       data-inquiry-btn 
+                       data-property-id="imovel-nome"
+                       data-property-name="Nome do Imóvel"
+                       target="_blank" 
+                       class="btn" 
+                       style="flex: 1;">
+                        <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> WhatsApp
+                    </a>
+                    <a href="../contato.html" class="btn-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-primary); gap: 8px; text-decoration: none;">
+                        <i class="fas fa-envelope"></i> Contato
+                    </a>
+                </div>
+            </div>
+
+            <!-- Coluna Direita - Card de Contato -->
+            <div>
+                <div class="contact-card fade-in">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">Solicite uma Visita</h3>
+                    
+                    <form id="propertyContactForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="text" placeholder="Seu Nome" class="form-control" required>
+                        <input type="email" placeholder="Seu E-mail" class="form-control" required>
+                        <input type="tel" placeholder="Seu Telefone" class="form-control" required>
+                        <textarea placeholder="Mensagem (opcional)" class="form-control" rows="4"></textarea>
+                        <button type="submit" class="btn" style="width: 100%;">Agendar Visita</button>
+                    </form>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                        <p style="color: var(--color-text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Ou entre em contato diretamente:
+                        </p>
+                        <p style="color: var(--color-accent); font-weight: 600; font-size: 1.2rem;">
+                            +55 79 99812-9141
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="copyright">&copy; 2025 Cathia Aguiar - Corretora de Imóveis.</div>
+        </div>
+    </footer>
+
+    <!-- Seu JS do projeto -->
+    <script src="../assets/js/main.js"></script>
+
+    <!-- Firebase e sistema de inquéritos -->
+    <script type="module">
+        import { initPropertyInquiry } from '../assets/js/property-inquiry.js';
+        
+        // Inicializa rastreamento de inquéritos
+        initPropertyInquiry();
+        
+        // Dados do imóvel (customize isso)
+        const propertyData = {
+            id: 'imovel-nome',
+            title: 'Casa no Condomínio Vilaredo',
+            location: 'Barra dos Coqueiros, SE',
+            price: 850000,
+            bedrooms: 4,
+            bathrooms: 3,
+            area: 250,
+            description: 'Descrição completa do imóvel...',
+            images: [
+                '../assets/img/imovel-exemplo.jpg',
+                '../assets/img/imovel-exemplo.jpg',
+                // Adicione mais imagens aqui
+            ]
+        };
+
+        // Preencher dados da página
+        document.getElementById('propertyTitle').textContent = propertyData.title;
+        document.getElementById('propertyLocation').innerHTML = 
+            `<i class="fas fa-map-marker-alt" style="color: var(--color-accent); margin-right: 8px;"></i>${propertyData.location}`;
+        document.getElementById('propertyPrice').textContent = 
+            new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(propertyData.price);
+        document.getElementById('propertyDescription').textContent = propertyData.description;
+
+        // Amenidades
+        const amenitiesHTML = `
+            <div class="amenity-item">
+                <i class="fas fa-bed amenity-icon"></i>
+                <strong>${propertyData.bedrooms} Quartos</strong>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-bath amenity-icon"></i>
+                <strong>${propertyData.bathrooms} Banheiros</strong>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-ruler-combined amenity-icon"></i>
+                <strong>${propertyData.area} m²</strong>
+            </div>
+        `;
+        document.getElementById('amenities').innerHTML = amenitiesHTML;
+
+        // Imagens
+        const mainImage = document.getElementById('mainImage');
+        const thumbnails = document.getElementById('thumbnails');
+
+        propertyData.images.forEach((img, index) => {
+            const thumb = document.createElement('img');
+            thumb.src = img;
+            thumb.alt = `Imagem ${index + 1}`;
+            thumb.className = 'thumb';
+            if (index === 0) thumb.classList.add('active');
+            
+            thumb.addEventListener('click', () => {
+                mainImage.src = img;
+                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+            });
+            
+            thumbnails.appendChild(thumb);
+        });
+
+        // Formulário de contato
+        document.getElementById('propertyContactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Aqui você pode integrar com Firebase também
+            alert('Formulário enviado! Entraremos em contato em breve.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

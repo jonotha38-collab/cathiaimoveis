@@ -1,17 +1,21 @@
-<!DOCTYPE html>
+import os
+
+# Template base
+template = """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa no Condomínio Vilaredo - Barra dos Coqueiros | Cathia Aguiar - Corretora de Imóveis</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- ALTERAR: Título da página com nome e localização do imóvel -->
+    <title>Nome do Imóvel {num} - Localização | Cathia Aguiar - Corretora de Imóveis</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        .modal {
+        .modal {{
             display: none;
             position: fixed;
             z-index: 2000;
@@ -22,8 +26,8 @@
             overflow: auto;
             background-color: rgba(0,0,0,0.6);
             backdrop-filter: blur(5px);
-        }
-        .modal-content {
+        }}
+        .modal-content {{
             background-color: #fff;
             margin: 5% auto;
             padding: 0;
@@ -33,33 +37,33 @@
             position: relative;
             box-shadow: 0 5px 30px rgba(0,0,0,0.3);
             animation: slideDown 0.4s ease;
-        }
-        @keyframes slideDown {
-            from {transform: translateY(-50px); opacity: 0;}
-            to {transform: translateY(0); opacity: 1;}
-        }
-        .close-modal {
+        }}
+        @keyframes slideDown {{
+            from {{transform: translateY(-50px); opacity: 0;}}
+            to {{transform: translateY(0); opacity: 1;}}
+        }}
+        .close-modal {{
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             padding: 10px 20px;
-        }
-        .close-modal:hover { color: var(--color-primary); }
-        .modal-header {
+        }}
+        .close-modal:hover {{ color: var(--color-primary); }}
+        .modal-header {{
             background: var(--color-bg);
             padding: 20px;
             border-bottom: 1px solid #eee;
-        }
-        .modal-body { padding: 30px; }
+        }}
+        .modal-body {{ padding: 30px; }}
     </style>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo-container">
+            <a href="../index.html" class="logo-container">
             <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M 10 45 L 50 10 L 90 45" />
                 <path d="M 20 36 V 90 H 80 V 36" />
@@ -76,12 +80,12 @@
                 <span></span><span></span><span></span>
             </div>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="imoveis.html" class="active">Imóveis</a>
+                <a href="../index.html">Home</a>
+                <a href="../imoveis.html" class="active">Imóveis</a>
                 
-                <a href="sobre.html">Sobre</a>
-                <a href="contato.html">Contato</a>
-                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+                <a href="../sobre.html">Sobre</a>
+                <a href="../contato.html">Contato</a>
+                <a href="../contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
             </div>
         </div>
     </nav>
@@ -90,86 +94,55 @@
 
     <main class="section container">
         
-        <!-- Breadcrumbs -->
         <div style="margin-bottom: 2rem; color: var(--color-text-light); font-size: 0.9rem;">
-            <a href="index.html">Home</a> / <a href="imoveis.html">Imóveis</a> / <span>Casa no Condomínio Vilaredo</span>
+            <a href="../index.html">Home</a> / <a href="../imoveis.html">Imóveis</a> / <span>Nome do Imóvel {num}</span>
         </div>
 
-        <!-- Galeria de Imagens -->
+        <!-- ALTERAR: Imagem principal e thumbnails -->
         <div class="property-gallery fade-in">
-            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1200&auto=format&fit=crop" alt="Principal" class="main-image" id="main-image">
+            <img src="../assets/img/IMAGEM-IMOVEL-{num}.jpg" alt="Principal" class="main-image" id="main-image">
             <div class="thumbs">
-                <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=200&auto=format&fit=crop" class="thumb active" onclick="changeImage(this)">
-                <img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?q=80&w=200&auto=format&fit=crop" class="thumb" onclick="changeImage(this)">
-                <img src="https://images.unsplash.com/photo-1584622050111-993a426fbf0a?q=80&w=200&auto=format&fit=crop" class="thumb" onclick="changeImage(this)">
-                <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=200&auto=format&fit=crop" class="thumb" onclick="changeImage(this)">
+                <img src="../assets/img/IMAGEM-IMOVEL-{num}.jpg" class="thumb active" onclick="changeImage(this)">
             </div>
         </div>
 
         <div class="property-details-grid">
-            <!-- Informações do Imóvel -->
             <div class="fade-in">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                     <div>
-                        <span class="tag-exclusive" style="position: static; display: inline-block; margin-bottom: 0.5rem;">Exclusivo</span>
-                        <h1 style="margin-bottom: 0.5rem;">Casa no Condomínio Vilaredo</h1>
-                        <p style="color: var(--color-text-light);"><i class="fas fa-map-marker-alt"></i> Barra dos Coqueiros, Aracaju - SE</p>
+                        <!-- ALTERAR: Nome do imóvel -->
+                        <h1 style="margin-bottom: 0.5rem;">Nome do Imóvel {num}</h1>
+                        <!-- ALTERAR: Localização -->
+                        <p style="color: var(--color-text-light);"><i class="fas fa-map-marker-alt"></i> Bairro, Cidade - Estado</p>
                     </div>
-                    <div class="card-price" style="font-size: 2rem;">R$ 560.000</div>
+                    <!-- ALTERAR: Preço -->
+                    <div class="card-price" style="font-size: 2rem;">R$ 0,00</div>
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
 
                 <h3>Sobre o Imóvel</h3>
-                <p style="margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 500; color: var(--color-primary);">
-                    Passe o Natal e o Ano Novo no seu novo lar!
-                </p>
+                <!-- ALTERAR: Descrição do imóvel -->
                 <p style="margin-bottom: 1.5rem;">
-                    Conforto, praticidade e excelente ventilação em 130 m² muito bem aproveitados.
-                </p>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ 3/4, sendo 1 suíte</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Sala com pé direito elevado</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Cozinha integrada à área gourmet</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ WC social entre dois quartos</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Área de ventilação</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Área de serviço</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Garagem coberta para 2 carros</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Área gourmet com lavabo</strong></p>
-                    <p style="margin-bottom: 0.8rem;"><strong>✅ Corredor lateral, jardim e casa de gás</strong></p>
-                    <p style="margin-bottom: 1.5rem;"><strong>✅ Lajeada, ventilada e pronta pra morar!</strong></p>
-                </div>
-
-                <p style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--color-accent); font-weight: 600;">
-                    💰 R$ 560.000
-                </p>
-                <p style="margin-bottom: 1rem;">
-                    📍 Condomínio seguro, organizado e com ótima vizinhança.
-                </p>
-                <p style="margin-bottom: 1.5rem; font-style: italic; color: var(--color-text-light);">
-                    🎁 Realize o sonho da casa própria e comece 2026 com boas energias!
+                    Escreva aqui a descrição do imóvel.
                 </p>
 
-                <!-- Comodidades -->
+                <!-- ALTERAR: Características do imóvel -->
                 <div class="amenities-table">
-                    <div class="amenity-item"><i class="fas fa-bed amenity-icon"></i> 3 Quartos</div>
-                    <div class="amenity-item"><i class="fas fa-bath amenity-icon"></i> 2 Banheiros</div>
-                    <div class="amenity-item"><i class="fas fa-car amenity-icon"></i> 2 Vagas</div>
-                    <div class="amenity-item"><i class="fas fa-ruler-combined amenity-icon"></i> 130m²</div>
-                    <div class="amenity-item"><i class="fas fa-wind amenity-icon"></i> Ventilação Natural</div>
-                    <div class="amenity-item"><i class="fas fa-glass-cheers amenity-icon"></i> Área Gourmet</div>
+                    <div class="amenity-item"><i class="fas fa-bed amenity-icon"></i> 0 Quartos</div>
+                    <div class="amenity-item"><i class="fas fa-bath amenity-icon"></i> 0 Banheiros</div>
+                    <div class="amenity-item"><i class="fas fa-car amenity-icon"></i> 0 Vagas</div>
+                    <div class="amenity-item"><i class="fas fa-ruler-combined amenity-icon"></i> 0m²</div>
                 </div>
             </div>
 
-            <!-- Sidebar de Contato -->
             <aside>
                 <div class="contact-card fade-in">
                     <h3 class="text-center">Interessado?</h3>
                     <p class="text-center" style="margin-bottom: 1.5rem; font-size: 0.9rem;">Agende uma visita exclusiva.</p>
                     
                     <button id="openModalBtn" class="btn" style="width: 100%; margin-bottom: 1rem;">Agendar Visita</button>
-                    <a href="https://wa.me/557998129141?text=Olá! Tenho interesse na Casa no Condomínio Vilaredo" target="_blank" class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #25D366; color: #25D366; text-decoration: none;">
+                    <a href="https://wa.me/557998129141?text=Olá! Tenho interesse no imóvel {num}" target="_blank" class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #25D366; color: #25D366; text-decoration: none;">
                         <i class="fab fa-whatsapp"></i> Conversar no WhatsApp
                     </a>
                 </div>
@@ -177,7 +150,6 @@
         </div>
     </main>
 
-    <!-- Modal de Agendamento -->
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -220,41 +192,50 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
     <script>
-        // Galeria de Imagens
-        function changeImage(thumb) {
-            document.getElementById('main-image').src = thumb.src.replace('&w=200', '&w=1200');
+        function changeImage(thumb) {{
+            document.getElementById('main-image').src = thumb.src.replace('&w=200', '&w=1200').replace('w=200', 'w=1200');
             document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
             thumb.classList.add('active');
-        }
+        }}
 
-        // Modal
         const modal = document.getElementById('contactModal');
         const btn = document.getElementById('openModalBtn');
         const span = document.getElementsByClassName("close-modal")[0];
 
-        btn.onclick = function() {
+        btn.onclick = function() {{
             modal.style.display = "block";
-        }
+        }}
 
-        span.onclick = function() {
+        span.onclick = function() {{
             modal.style.display = "none";
-        }
+        }}
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
+        window.onclick = function(event) {{
+            if (event.target == modal) {{
                 modal.style.display = "none";
-            }
-        }
+            }}
+        }}
 
-        // Form Submit
-        document.getElementById('visitForm').addEventListener('submit', function(e) {
+        document.getElementById('visitForm').addEventListener('submit', function(e) {{
             e.preventDefault();
             alert('Solicitação enviada com sucesso! Entraremos em contato em breve.');
             modal.style.display = "none";
-        });
+        }});
     </script>
 </body>
 </html>
+"""
 
+# Criar arquivos de imovel-8 até imovel-32
+base_path = "imoveis"
+
+for i in range(8, 33):
+    filename = f"{base_path}/imovel-{i}.html"
+    content = template.format(num=i)
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print(f"✓ Criado: imovel-{i}.html")
+
+print("\n✓ Todos os 25 arquivos foram criados com sucesso!")

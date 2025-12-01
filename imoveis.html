@@ -4,36 +4,393 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imóveis Exclusivos | Cathia Aguiar - Corretora de Imóveis</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* ===== CUSTOMIZAÇÕES PROFISSIONAIS ===== */
+        
+        .properties-section {
+            padding: 4rem 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        .section-header p {
+            color: var(--color-text-light);
+            font-size: 1rem;
+            margin: 0;
+            max-width: 400px;
+        }
+
+        /* ===== FILTROS PROFISSIONAIS ===== */
+        .filter-container {
+            background: linear-gradient(135deg, #FEFCFB 0%, #F5F1ED 100%);
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(184, 103, 77, 0.1);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.85rem;
+            border: 1px solid rgba(184, 103, 77, 0.2);
+            border-radius: 4px;
+            background: white;
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            transition: var(--transition);
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(217, 123, 87, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            grid-column: 1 / -1;
+        }
+
+        .filter-actions button {
+            padding: 0.85rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-filter {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .btn-filter:hover {
+            background: var(--color-accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(217, 123, 87, 0.3);
+        }
+
+        .btn-clear {
+            background: white;
+            color: var(--color-text-light);
+            border: 1px solid rgba(184, 103, 77, 0.2);
+        }
+
+        .btn-clear:hover {
+            background: #f9f9f9;
+            border-color: var(--color-accent);
+        }
+
+        /* ===== PROPERTIES GRID ===== */
+        #properties-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important;
+            gap: 2.5rem !important;
+            margin-top: 2rem !important;
+            width: 100% !important;
+        }
+
+        #properties-grid article {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            background: white !important;
+            border: 1px solid rgba(184, 103, 77, 0.1) !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        #properties-grid article:hover {
+            transform: translateY(-12px) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
+            border-color: var(--color-accent) !important;
+        }
+
+        #properties-grid a {
+            display: block !important;
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        /* ===== CARD IMAGE ===== */
+        .card-image {
+            width: 100% !important;
+            height: 280px !important;
+            overflow: hidden !important;
+            position: relative !important;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%) !important;
+        }
+
+        .card-image img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block !important;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        #properties-grid article:hover .card-image img {
+            transform: scale(1.08) !important;
+        }
+
+        .tag-exclusive {
+            position: absolute !important;
+            top: 1.5rem !important;
+            right: 1.5rem !important;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%) !important;
+            color: white !important;
+            padding: 8px 16px !important;
+            font-size: 0.7rem !important;
+            text-transform: uppercase !important;
+            font-weight: 700 !important;
+            border-radius: 4px !important;
+            z-index: 10 !important;
+            letter-spacing: 0.1em !important;
+            box-shadow: 0 4px 12px rgba(217, 123, 87, 0.3) !important;
+        }
+
+        /* ===== CARD CONTENT ===== */
+        .card-content {
+            padding: 2rem !important;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .card-price {
+            color: var(--color-accent) !important;
+            font-size: 1.95rem !important;
+            font-weight: 700 !important;
+            margin: 0 !important;
+            display: block !important;
+            font-family: var(--font-serif) !important;
+        }
+
+        .card-price-unit {
+            font-size: 0.75rem;
+            color: var(--color-text-light);
+            font-weight: 500;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .card-title {
+            color: var(--color-primary) !important;
+            font-size: 1.4rem !important;
+            margin: 1rem 0 0.75rem 0 !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+            font-family: var(--font-serif) !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        .card-location {
+            color: var(--color-text-light) !important;
+            font-size: 0.95rem !important;
+            margin-bottom: 1.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .card-location i {
+            color: var(--color-accent) !important;
+        }
+
+        /* ===== CARD FEATURES ===== */
+        .card-features {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 1rem !important;
+            border-top: 1px solid rgba(184, 103, 77, 0.1) !important;
+            padding-top: 1.5rem !important;
+        }
+
+        .feature-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .feature-item i {
+            color: var(--color-accent) !important;
+            font-size: 1.2rem !important;
+        }
+
+        .feature-item span {
+            display: block !important;
+        }
+
+        .feature-value {
+            font-size: 1.1rem !important;
+            font-weight: 700 !important;
+            color: var(--color-primary) !important;
+        }
+
+        .feature-label {
+            font-size: 0.75rem !important;
+            color: var(--color-text-light) !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            font-weight: 600 !important;
+        }
+
+        /* ===== LOADING STATE ===== */
+        .loading-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--color-text-light);
+        }
+
+        .loading-message i {
+            font-size: 2rem;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--color-accent);
+            opacity: 0.4;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--color-text-light);
+            font-size: 1rem;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #properties-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+            }
+
+            .filter-actions button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo-container">
-            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M 10 45 L 50 10 L 90 45" />
-                <path d="M 20 36 V 90 H 80 V 36" />
-                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
-                <path d="M 50 75 V 90" />
-            </svg>
-            <div class="logo-text">
-                <span class="logo-title">CATHIA AGUIAR</span>
-                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
-                <span class="logo-creci">CRECI 1743</span>
-            </div>
-        </a>
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 10 45 L 50 10 L 90 45" />
+                    <path d="M 20 36 V 90 H 80 V 36" />
+                    <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                    <path d="M 50 75 V 90" />
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-title">CATHIA AGUIAR</span>
+                    <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                    <span class="logo-creci">CRECI 1743</span>
+                </div>
+            </a>
             <div class="hamburger">
                 <span></span><span></span><span></span>
             </div>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="imoveis.html" class="active">Imóveis</a>
-                
                 <a href="sobre.html">Sobre</a>
                 <a href="contato.html">Contato</a>
                 <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
@@ -41,235 +398,97 @@
         </div>
     </nav>
 
-    <header class="hero" style="height: 40vh; min-height: 300px; background-image: linear-gradient(rgba(184, 103, 77, 0.8), rgba(184, 103, 77, 0.8)), url('assets/img/Logo/logo1.jpg');">
+    <!-- HERO HEADER -->
+    <header class="hero" style="height: 35vh; min-height: 280px; background-image: linear-gradient(135deg, rgba(184, 103, 77, 0.85), rgba(217, 123, 87, 0.75)), url('assets/img/Logo/logo1.jpg'); background-position: center; background-size: cover;">
         <div class="hero-content fade-in">
-            <h1>Nossa Coleção</h1>
-            <p>Encontre a propriedade perfeita para seu estilo de vida</p>
+            <h1>Nossa Coleção de Imóveis</h1>
+            <p style="font-size: 1.1rem; font-weight: 300;">Propriedades exclusivas selecionadas com excelência</p>
         </div>
     </header>
 
-    <section class="section container">
-        <!-- Filtros -->
-        <div class="filters-bar fade-in">
+    <!-- MAIN CONTENT -->
+    <section class="properties-section container">
+        
+        <!-- SECTION HEADER -->
+        <div class="section-header">
+            <div>
+                <h2>Imóveis Disponíveis</h2>
+                <p>Explore nossa carteira exclusiva de propriedades de alto padrão</p>
+            </div>
         </div>
 
-        <!-- Grid -->
-        <div class="properties-grid" id="properties-grid">
-            
-            <!-- ============================================ -->
-            <!-- CARD 1 - IMÓVEL 1 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-1.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/img imovel1/imobiliaria.jpg" alt="Casa no Condomínio Vilaredo" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <span class="tag-exclusive">Exclusivo</span>
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 560.000</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Casa no Condomínio Vilaredo</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> Barra dos Coqueiros, Aracaju - SE
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 3</span>
-                            <span><i class="fas fa-bath"></i> 2</span>
-                            <span><i class="fas fa-ruler-combined"></i> 130m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 1 -->
-            
-            <!-- ============================================ -->
-            <!-- CARD 2 - IMÓVEL 2 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-2.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/img imovel2/1.webp" alt="Casa à venda no MORADA DO RIO">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <!-- <span class="tag-exclusive">Exclusivo</span> -->
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 3.500.000,00</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Casa de Alto Padrão no Condomínio Morada do Rio</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> SÃO JOSÉ DOS NÁUFRAGOS , Aracaju, SE
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 5</span>
-                            <span><i class="fas fa-bath"></i> 7</span>
-                            <span><i class="fas fa-ruler-combined"></i> 800m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 2 -->
-            
-            <!-- ============================================ -->
-            <!-- CARD 3 - IMÓVEL 3 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-3.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/img imovel3/1.webp" alt="Nome do Imóvel 3">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <!-- <span class="tag-exclusive">Exclusivo</span> -->
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 370.000,00</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Apartamento VILLA CRISTINA</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> CENTRO, Aracaju, SE
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 3</span>
-                            <span><i class="fas fa-bath"></i> 3</span>
-                            <span><i class="fas fa-ruler-combined"></i> 110m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 3 -->
-            
-            <!-- ============================================ -->
-            <!-- CARD 4 - IMÓVEL 4 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-4.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/IMAGEM-IMOVEL-4.jpg" alt="Nome do Imóvel 4">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <!-- <span class="tag-exclusive">Exclusivo</span> -->
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 0,00</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Nome do Imóvel 4</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> Bairro, Cidade - Estado
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 0</span>
-                            <span><i class="fas fa-bath"></i> 0</span>
-                            <span><i class="fas fa-ruler-combined"></i> 0m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 4 -->
-            
-            <!-- ============================================ -->
-            <!-- CARD 5 - IMÓVEL 5 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-5.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/IMAGEM-IMOVEL-5.jpg" alt="Nome do Imóvel 5">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <!-- <span class="tag-exclusive">Exclusivo</span> -->
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 0,00</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Nome do Imóvel 5</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> Bairro, Cidade - Estado
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 0</span>
-                            <span><i class="fas fa-bath"></i> 0</span>
-                            <span><i class="fas fa-ruler-combined"></i> 0m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 5 -->
-            
-            <!-- ============================================ -->
-            <!-- CARD 6 - IMÓVEL 6 -->
-            <!-- ============================================ -->
-            <article class="property-card fade-in">
-                <a href="imoveis/imovel-6.html">
-                    <!-- IMAGEM PRINCIPAL: Substitua o caminho abaixo pela sua imagem -->
-                    <div class="card-image">
-                        <img src="assets/img/IMAGEM-IMOVEL-6.jpg" alt="Nome do Imóvel 6">
-                        <!-- Remova a linha abaixo se NÃO for exclusivo -->
-                        <!-- <span class="tag-exclusive">Exclusivo</span> -->
-                    </div>
-                    <div class="card-content">
-                        <!-- PREÇO: Altere o valor abaixo -->
-                        <span class="card-price">R$ 0,00</span>
-                        <!-- TÍTULO: Altere o nome do imóvel abaixo -->
-                        <h3 class="card-title">Nome do Imóvel 6</h3>
-                        <!-- LOCALIZAÇÃO: Altere bairro, cidade e estado -->
-                        <div class="card-location">
-                            <i class="fas fa-map-marker-alt"></i> Bairro, Cidade - Estado
-                        </div>
-                        <!-- CARACTERÍSTICAS: Altere quartos, banheiros e área -->
-                        <div class="card-features">
-                            <span><i class="fas fa-bed"></i> 0</span>
-                            <span><i class="fas fa-bath"></i> 0</span>
-                            <span><i class="fas fa-ruler-combined"></i> 0m²</span>
-                        </div>
-                    </div>
-                </a>
-            </article>
-            <!-- FIM CARD 6 -->
-            
-            <!-- ============================================ -->
-            <!-- INSTRUÇÕES: -->
-            <!-- 1. Para cada card acima, preencha as informações marcadas com comentários -->
-            <!-- 2. Crie uma página individual para cada imóvel (imovel-1.html, imovel-2.html, etc.) -->
-            <!-- 3. Coloque as imagens na pasta assets/img/ -->
-            <!-- 4. Para adicionar mais cards, copie um dos blocos acima e altere o número -->
-            <!-- ============================================ -->
-            
+        <!-- FILTER CONTAINER -->
+        <div class="filter-container">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="filter-location">Localização</label>
+                    <select id="filter-location">
+                        <option value="">Todos os Bairros</option>
+                        <option value="aracaju">Aracaju</option>
+                        <option value="barra">Barra dos Coqueiros</option>
+                        <option value="aruana">Aruana</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-bedrooms">Quartos</label>
+                    <select id="filter-bedrooms">
+                        <option value="">Qualquer Quantidade</option>
+                        <option value="1">1 Quarto</option>
+                        <option value="2">2 Quartos</option>
+                        <option value="3">3+ Quartos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-price">Preço Máximo</label>
+                    <select id="filter-price">
+                        <option value="">Sem Limite</option>
+                        <option value="500000">R$ 500 mil</option>
+                        <option value="1000000">R$ 1 milhão</option>
+                        <option value="5000000">R$ 5 milhões</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn-filter" onclick="applyFilters()">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    <button class="btn-clear" onclick="clearFilters()">
+                        <i class="fas fa-redo"></i> Limpar
+                    </button>
+                </div>
+            </div>
         </div>
+
+        <!-- PROPERTIES GRID -->
+        <div id="properties-grid">
+            <div class="loading-message">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Carregando imóveis...</p>
+            </div>
+        </div>
+
     </section>
 
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="#" class="logo-container">
-            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M 10 45 L 50 10 L 90 45" />
-                <path d="M 20 36 V 90 H 80 V 36" />
-                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
-                <path d="M 50 75 V 90" />
-            </svg>
-            <div class="logo-text">
-                <span class="logo-title">CATHIA AGUIAR</span>
-                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
-                <span class="logo-creci">CRECI 1743</span>
-            </div>
-        </a>
+                        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M 10 45 L 50 10 L 90 45" />
+                            <path d="M 20 36 V 90 H 80 V 36" />
+                            <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                            <path d="M 50 75 V 90" />
+                        </svg>
+                        <div class="logo-text">
+                            <span class="logo-title">CATHIA AGUIAR</span>
+                            <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                            <span class="logo-creci">CRECI 1743</span>
+                        </div>
+                    </a>
                     <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Excelência em intermediação imobiliária de residências de médio e alto padrão.</p>
                 </div>
                 <div class="footer-links">
@@ -295,6 +514,197 @@
         </div>
     </footer>
 
+    <!-- MAIN JS -->
     <script src="assets/js/main.js"></script>
+
+    <!-- FIREBASE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const propertiesGrid = document.getElementById('properties-grid');
+        let allProperties = [];
+
+        async function loadProperties() {
+            try {
+                const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                allProperties = [];
+                propertiesGrid.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    propertiesGrid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-home"></i>
+                            <h3>Nenhum imóvel disponível</h3>
+                            <p>Volte em breve para ver novas propriedades exclusivas</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    allProperties.push({ id: doc.id, ...doc.data() });
+                });
+
+                renderProperties(allProperties);
+
+            } catch (error) {
+                console.error("Erro:", error);
+                propertiesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Erro ao carregar</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderProperties(properties) {
+            propertiesGrid.innerHTML = '';
+
+            if (properties.length === 0) {
+                propertiesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Nenhum imóvel encontrado</h3>
+                        <p>Tente ajustar seus filtros</p>
+                    </div>
+                `;
+                return;
+            }
+
+            properties.forEach((property) => {
+                const title = property.title || "Sem título";
+                const price = property.price || 0;
+                const location = property.location || "Localização";
+                const bedrooms = property.bedrooms || 0;
+                const bathrooms = property.bathrooms || 0;
+                const area = property.area || 0;
+                const image = property.image || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop";
+                const exclusive = property.exclusive || false;
+
+                const formattedPrice = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(price);
+
+                const exclusiveTag = exclusive ? '<span class="tag-exclusive">Exclusivo</span>' : '';
+
+                const card = document.createElement('article');
+                card.innerHTML = `
+                    <a href="imovel-detalhes.html?id=${property.id}">
+                        <div class="card-image">
+                            <img src="${image}" alt="${title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
+                            ${exclusiveTag}
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span class="card-price">${formattedPrice}</span>
+                            </div>
+                            <h3 class="card-title">${title}</h3>
+                            <div class="card-location">
+                                <i class="fas fa-map-marker-alt"></i> ${location}
+                            </div>
+                            <div class="card-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-bed"></i>
+                                    <span class="feature-value">${bedrooms}</span>
+                                    <span class="feature-label">Quartos</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-bath"></i>
+                                    <span class="feature-value">${bathrooms}</span>
+                                    <span class="feature-label">Banheiros</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-ruler-combined"></i>
+                                    <span class="feature-value">${area}m²</span>
+                                    <span class="feature-label">Área</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+                propertiesGrid.appendChild(card);
+            });
+        }
+
+        window.applyFilters = function() {
+            const locationValue = document.getElementById('filter-location').value;
+            const bedroomsValue = document.getElementById('filter-bedrooms').value;
+            const priceValue = document.getElementById('filter-price').value;
+
+            console.log('Filtros aplicados:', { locationValue, bedroomsValue, priceValue });
+
+            const filtered = allProperties.filter(property => {
+                // Filtro de Localização
+                if (locationValue) {
+                    const propertyLocation = property.location.toLowerCase();
+                    const locationMatch = propertyLocation.includes(locationValue.toLowerCase());
+                    console.log(`Testando localização: ${property.location} includes ${locationValue}? ${locationMatch}`);
+                    if (!locationMatch) return false;
+                }
+
+                // Filtro de Quartos
+                if (bedroomsValue) {
+                    const requiredBedrooms = parseInt(bedroomsValue);
+                    const bedroomMatch = property.bedrooms >= requiredBedrooms;
+                    console.log(`Testando quartos: ${property.bedrooms} >= ${requiredBedrooms}? ${bedroomMatch}`);
+                    if (!bedroomMatch) return false;
+                }
+
+                // Filtro de Preço
+                if (priceValue) {
+                    const maxPrice = parseInt(priceValue);
+                    const priceMatch = property.price <= maxPrice;
+                    console.log(`Testando preço: ${property.price} <= ${maxPrice}? ${priceMatch}`);
+                    if (!priceMatch) return false;
+                }
+
+                return true;
+            });
+
+            console.log(`Resultados da filtragem: ${filtered.length} imóvel(is) encontrado(s)`);
+            renderProperties(filtered);
+        };
+
+        window.clearFilters = function() {
+            document.getElementById('filter-location').value = '';
+            document.getElementById('filter-bedrooms').value = '';
+            document.getElementById('filter-price').value = '';
+            console.log('Filtros limpos - mostrando todos os imóveis');
+            renderProperties(allProperties);
+        };
+
+        // Aplicar filtros automaticamente quando o usuário muda uma opção
+        document.getElementById('filter-location').addEventListener('change', applyFilters);
+        document.getElementById('filter-bedrooms').addEventListener('change', applyFilters);
+        document.getElementById('filter-price').addEventListener('change', applyFilters);
+
+        loadProperties();
+    </script>
 </body>
 </html>
