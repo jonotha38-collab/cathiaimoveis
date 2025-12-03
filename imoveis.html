@@ -418,37 +418,52 @@
         </div>
 
         <!-- FILTER CONTAINER -->
-        <div class="filter-container">
-            <div class="filter-grid">
-                <div class="filter-group">
-                    <label for="filter-location">Localização</label>
-                    <select id="filter-location">
-                        <option value="">Todos os Bairros</option>
-                        <option value="aracaju">Aracaju</option>
-                        <option value="barra">Barra dos Coqueiros</option>
-                        <option value="aruana">Aruana</option>
-                    </select>
-                </div>
+         <div class="filter-container">
+             <div class="filter-grid">
+                 <div class="filter-group">
+                     <label for="filter-type">Tipo de Imóvel</label>
+                     <select id="filter-type">
+                         <option value="">Todos os Tipos</option>
+                         <option value="casa">Casa</option>
+                         <option value="apartamento">Apartamento</option>
+                         <option value="condominio">Condomínio</option>
+                         <option value="condominio-casa">Condomínio de Casa</option>
+                         <option value="lote">Lote</option>
+                         <option value="comercial">Comercial</option>
+                         <option value="galpao">Galpão</option>
+                         <option value="chacara">Chácara</option>
+                     </select>
+                 </div>
 
-                <div class="filter-group">
-                    <label for="filter-bedrooms">Quartos</label>
-                    <select id="filter-bedrooms">
-                        <option value="">Qualquer Quantidade</option>
-                        <option value="1">1 Quarto</option>
-                        <option value="2">2 Quartos</option>
-                        <option value="3">3+ Quartos</option>
-                    </select>
-                </div>
+                 <div class="filter-group">
+                     <label for="filter-location">Localização</label>
+                     <select id="filter-location">
+                         <option value="">Todos os Bairros</option>
+                         <option value="aracaju">Aracaju</option>
+                         <option value="barra">Barra dos Coqueiros</option>
+                         <option value="aruana">Aruana</option>
+                     </select>
+                 </div>
 
-                <div class="filter-group">
-                    <label for="filter-price">Preço Máximo</label>
-                    <select id="filter-price">
-                        <option value="">Sem Limite</option>
-                        <option value="500000">R$ 500 mil</option>
-                        <option value="1000000">R$ 1 milhão</option>
-                        <option value="5000000">R$ 5 milhões</option>
-                    </select>
-                </div>
+                 <div class="filter-group">
+                     <label for="filter-bedrooms">Quartos</label>
+                     <select id="filter-bedrooms">
+                         <option value="">Qualquer Quantidade</option>
+                         <option value="1">1 Quarto</option>
+                         <option value="2">2 Quartos</option>
+                         <option value="3">3+ Quartos</option>
+                     </select>
+                 </div>
+
+                 <div class="filter-group">
+                     <label for="filter-price">Preço Máximo</label>
+                     <select id="filter-price">
+                         <option value="">Sem Limite</option>
+                         <option value="500000">R$ 500 mil</option>
+                         <option value="1000000">R$ 1 milhão</option>
+                         <option value="5000000">R$ 5 milhões</option>
+                     </select>
+                 </div>
 
                 <div class="filter-actions">
                     <button class="btn-filter" onclick="applyFilters()">
@@ -602,6 +617,7 @@
                 const bedrooms = property.bedrooms || 0;
                 const bathrooms = property.bathrooms || 0;
                 const area = property.area || 0;
+                const propertyType = property.propertyType || "casa";
                 const image = property.image || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop";
                 const exclusive = property.exclusive || false;
 
@@ -611,6 +627,36 @@
                 }).format(price);
 
                 const exclusiveTag = exclusive ? '<span class="tag-exclusive">Exclusivo</span>' : '';
+
+                // Para lotes, não mostrar quartos e banheiros
+                let featuresHTML = '';
+                if (propertyType === 'lote') {
+                    featuresHTML = `
+                        <div class="feature-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span class="feature-value">${area}m²</span>
+                            <span class="feature-label">Área</span>
+                        </div>
+                    `;
+                } else {
+                    featuresHTML = `
+                        <div class="feature-item">
+                            <i class="fas fa-bed"></i>
+                            <span class="feature-value">${bedrooms}</span>
+                            <span class="feature-label">Quartos</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bath"></i>
+                            <span class="feature-value">${bathrooms}</span>
+                            <span class="feature-label">Banheiros</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span class="feature-value">${area}m²</span>
+                            <span class="feature-label">Área</span>
+                        </div>
+                    `;
+                }
 
                 const card = document.createElement('article');
                 card.innerHTML = `
@@ -628,21 +674,7 @@
                                 <i class="fas fa-map-marker-alt"></i> ${location}
                             </div>
                             <div class="card-features">
-                                <div class="feature-item">
-                                    <i class="fas fa-bed"></i>
-                                    <span class="feature-value">${bedrooms}</span>
-                                    <span class="feature-label">Quartos</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-bath"></i>
-                                    <span class="feature-value">${bathrooms}</span>
-                                    <span class="feature-label">Banheiros</span>
-                                </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-ruler-combined"></i>
-                                    <span class="feature-value">${area}m²</span>
-                                    <span class="feature-label">Área</span>
-                                </div>
+                                ${featuresHTML}
                             </div>
                         </div>
                     </a>
@@ -653,45 +685,54 @@
         }
 
         window.applyFilters = function() {
-            const locationValue = document.getElementById('filter-location').value;
-            const bedroomsValue = document.getElementById('filter-bedrooms').value;
-            const priceValue = document.getElementById('filter-price').value;
+             const typeValue = document.getElementById('filter-type').value;
+             const locationValue = document.getElementById('filter-location').value;
+             const bedroomsValue = document.getElementById('filter-bedrooms').value;
+             const priceValue = document.getElementById('filter-price').value;
 
-            console.log('Filtros aplicados:', { locationValue, bedroomsValue, priceValue });
+             console.log('Filtros aplicados:', { typeValue, locationValue, bedroomsValue, priceValue });
 
-            const filtered = allProperties.filter(property => {
-                // Filtro de Localização
-                if (locationValue) {
-                    const propertyLocation = property.location.toLowerCase();
-                    const locationMatch = propertyLocation.includes(locationValue.toLowerCase());
-                    console.log(`Testando localização: ${property.location} includes ${locationValue}? ${locationMatch}`);
-                    if (!locationMatch) return false;
-                }
+             const filtered = allProperties.filter(property => {
+                 // Filtro de Tipo de Imóvel
+                 if (typeValue) {
+                     const typeMatch = (property.propertyType || '').toLowerCase() === typeValue.toLowerCase();
+                     console.log(`Testando tipo: ${property.propertyType} === ${typeValue}? ${typeMatch}`);
+                     if (!typeMatch) return false;
+                 }
 
-                // Filtro de Quartos
-                if (bedroomsValue) {
-                    const requiredBedrooms = parseInt(bedroomsValue);
-                    const bedroomMatch = property.bedrooms >= requiredBedrooms;
-                    console.log(`Testando quartos: ${property.bedrooms} >= ${requiredBedrooms}? ${bedroomMatch}`);
-                    if (!bedroomMatch) return false;
-                }
+                 // Filtro de Localização
+                 if (locationValue) {
+                     const propertyLocation = property.location.toLowerCase();
+                     const locationMatch = propertyLocation.includes(locationValue.toLowerCase());
+                     console.log(`Testando localização: ${property.location} includes ${locationValue}? ${locationMatch}`);
+                     if (!locationMatch) return false;
+                 }
 
-                // Filtro de Preço
-                if (priceValue) {
-                    const maxPrice = parseInt(priceValue);
-                    const priceMatch = property.price <= maxPrice;
-                    console.log(`Testando preço: ${property.price} <= ${maxPrice}? ${priceMatch}`);
-                    if (!priceMatch) return false;
-                }
+                 // Filtro de Quartos
+                 if (bedroomsValue) {
+                     const requiredBedrooms = parseInt(bedroomsValue);
+                     const bedroomMatch = property.bedrooms >= requiredBedrooms;
+                     console.log(`Testando quartos: ${property.bedrooms} >= ${requiredBedrooms}? ${bedroomMatch}`);
+                     if (!bedroomMatch) return false;
+                 }
 
-                return true;
-            });
+                 // Filtro de Preço
+                 if (priceValue) {
+                     const maxPrice = parseInt(priceValue);
+                     const priceMatch = property.price <= maxPrice;
+                     console.log(`Testando preço: ${property.price} <= ${maxPrice}? ${priceMatch}`);
+                     if (!priceMatch) return false;
+                 }
 
-            console.log(`Resultados da filtragem: ${filtered.length} imóvel(is) encontrado(s)`);
-            renderProperties(filtered);
-        };
+                 return true;
+             });
+
+             console.log(`Resultados da filtragem: ${filtered.length} imóvel(is) encontrado(s)`);
+             renderProperties(filtered);
+         };
 
         window.clearFilters = function() {
+            document.getElementById('filter-type').value = '';
             document.getElementById('filter-location').value = '';
             document.getElementById('filter-bedrooms').value = '';
             document.getElementById('filter-price').value = '';
@@ -700,6 +741,7 @@
         };
 
         // Aplicar filtros automaticamente quando o usuário muda uma opção
+        document.getElementById('filter-type').addEventListener('change', applyFilters);
         document.getElementById('filter-location').addEventListener('change', applyFilters);
         document.getElementById('filter-bedrooms').addEventListener('change', applyFilters);
         document.getElementById('filter-price').addEventListener('change', applyFilters);

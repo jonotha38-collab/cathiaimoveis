@@ -10,29 +10,398 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .hero-contact {
+            height: 50vh;
+            min-height: 350px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-contact::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(201, 162, 39, 0.1) 0%, transparent 70%);
+            animation: pulse-bg 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse-bg {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, -30px); }
+        }
+
+        .hero-contact-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero-contact h1 {
+            font-family: var(--font-serif);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-accent);
+        }
+
+        .hero-contact p {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .contact-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .contact-left h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .contact-left p {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+        }
+
+        .whatsapp-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, #25D366 0%, #20BA58 100%);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
+            border: none;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .whatsapp-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-button i {
+            font-size: 1.5rem;
+        }
+
+        .contact-info {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .contact-info h3 {
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-item i {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, rgba(217, 123, 87, 0.1) 100%);
+            border-radius: 50%;
+        }
+
+        .info-item-content {
+            flex: 1;
+        }
+
+        .info-item-content h4 {
+            color: var(--color-primary);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .info-item-content p {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .contact-right {
+            background: linear-gradient(135deg, #f5f1ed 0%, #fefcfb 100%);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid rgba(201, 162, 39, 0.2);
+        }
+
+        .contact-right h3 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .contact-right p {
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .benefit-item i {
+            color: var(--color-accent);
+            margin-top: 0.3rem;
+            font-size: 1.2rem;
+        }
+
+        .benefit-item h4 {
+            color: var(--color-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .benefit-item p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin: 0;
+        }
+
+        .properties-contact-section {
+            background: white;
+            padding: 4rem 2rem;
+            border-top: 1px solid #eee;
+            margin-top: 4rem;
+        }
+
+        .properties-contact-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .properties-contact-header h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .properties-contact-header p {
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .property-card-contact {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .property-card-contact:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        .property-card-img {
+            width: 100%;
+            height: 200px;
+            background: #e0e0e0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .property-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-card-content {
+            padding: 1.5rem;
+        }
+
+        .property-card-content h4 {
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .property-card-price {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: var(--font-serif);
+        }
+
+        .property-card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .property-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .property-contact-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, #25D366 0%, #20BA58 100%);
+            color: white;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .property-contact-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .empty-properties {
+            text-align: center;
+            padding: 3rem;
+            color: var(--color-text-light);
+        }
+
+        .empty-properties i {
+            font-size: 3rem;
+            color: var(--color-accent);
+            opacity: 0.3;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .contact-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-contact h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-left h2 {
+                font-size: 1.8rem;
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .whatsapp-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo-container">
-            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M 10 45 L 50 10 L 90 45" />
-                <path d="M 20 36 V 90 H 80 V 36" />
-                <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
-                <path d="M 50 75 V 90" />
-            </svg>
-            <div class="logo-text">
-                <span class="logo-title">CATHIA AGUIAR</span>
-                <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
-                <span class="logo-creci">CRECI 1743</span>
-            </div>
-        </a>
+                <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M 10 45 L 50 10 L 90 45" />
+                    <path d="M 20 36 V 90 H 80 V 36" />
+                    <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                    <path d="M 50 75 V 90" />
+                </svg>
+                <div class="logo-text">
+                    <span class="logo-title">CATHIA AGUIAR</span>
+                    <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                    <span class="logo-creci">CRECI 1743</span>
+                </div>
+            </a>
             <div class="hamburger"><span></span><span></span><span></span></div>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="imoveis.html">Imóveis</a>
-                
                 <a href="sobre.html">Sobre</a>
                 <a href="contato.html" class="active">Contato</a>
                 <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
@@ -40,238 +409,288 @@
         </div>
     </nav>
 
-    <header class="hero" style="height: 40vh; min-height: 300px; background-image: linear-gradient(rgba(184, 103, 77, 0.8), rgba(184, 103, 77, 0.8)), url('assets/img/Logo/logo2.jpg');">
-        <div class="hero-content fade-in">
-            <h1>Atendimento Private</h1>
-            <p>Canais exclusivos para investidores e proprietários de alta renda.</p>
+    <!-- Hero Section -->
+    <div class="hero-contact">
+        <div class="hero-contact-content">
+            <h1>Vamos Conversar?</h1>
+            <p>Estou aqui para ajudar você a encontrar o imóvel perfeito</p>
         </div>
-    </header>
+    </div>
 
-    <section class="section container">
-        <!-- Seção de Canais de Contato -->
-        <div class="contact-channels fade-in" style="margin-bottom: 4rem;">
-            <div class="channel-grid">
-                <div class="contact-method">
-                    <div class="method-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-                    <h3>Telefone</h3>
-                    <p><strong>+55 79 99812-9141</strong></p>
-                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 0.5rem;">Ligações e WhatsApp</p>
-                </div>
-                <div class="contact-method">
-                    <div class="method-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h3>E-mail</h3>
-                    <p><strong>cathiaaguiar@hotmail.com</strong></p>
-                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 0.5rem;">Contato corporativo</p>
-                </div>
-                <div class="contact-method">
-                    <div class="method-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <h3>Horário</h3>
-                    <p><strong>Seg - Sex: 09h às 18h</strong></p>
-                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 0.5rem;">Sábados e feriados: sob agendamento</p>
-                </div>
-                <div class="contact-method">
-                    <div class="method-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Resposta Rápida</h3>
-                    <p><strong>Até 2 horas</strong></p>
-                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 0.5rem;">Atendimento prioritário</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Formulário e Informações -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 4rem;">
-            <!-- Form -->
-            <div class="fade-in">
-                <h2 class="text-primary">Inicie uma Conversa Privada</h2>
-                <p style="margin-bottom: 2rem; color: var(--color-text-light);">Nossa equipe de Concierge Imobiliário retornará seu contato com total discrição em até 2 horas comerciais.</p>
+    <!-- Main Contact Section -->
+    <div class="contact-container">
+        <div class="contact-main">
+            <!-- Left Column -->
+            <div class="contact-left">
+                <h2>Entre em Contato Agora</h2>
+                <p>Prefiro conversar pelo WhatsApp para que você tenha respostas rápidas e personalizadas sobre os imóveis que mais te interessam. Estou disponível para tirar todas as suas dúvidas!</p>
                 
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="name">Nome Completo</label>
-                        <input type="text" id="name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail Corporativo (Preferencial)</label>
-                        <input type="email" id="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Telefone / WhatsApp Private</label>
-                        <input type="tel" id="phone" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">Interesse</label>
-                        <select id="subject" class="form-control">
-                            <option value="comprar">Aquisição de Ativo</option>
-                            <option value="vender">Valuation & Venda</option>
-                            <option value="parceria">Parceria Institucional</option>
-                            <option value="outro">Assessoria Jurídica/Outros</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensagem</label>
-                        <textarea id="message" class="form-control" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn">Solicitar Consultoria</button>
-                    <p id="feedback" style="margin-top: 1rem; color: var(--color-accent); display: none; font-weight: 500;">Solicitação recebida com sucesso. Entraremos em contato.</p>
-                </form>
-            </div>
-
-            <!-- Info Cards -->
-            <div class="fade-in">
-                <h2 class="text-primary">Vantagens do Atendimento</h2>
-                
-                <div class="info-card" style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <i class="fas fa-check-circle" style="color: var(--color-accent); font-size: 1.5rem; flex-shrink: 0; margin-top: 0.25rem;"></i>
-                        <div>
-                            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Consultoria Especializada</h4>
-                            <p style="color: var(--color-text-light); font-size: 0.95rem;">Assessoria completa em todas as etapas da transação imobiliária.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-card" style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <i class="fas fa-shield-alt" style="color: var(--color-accent); font-size: 1.5rem; flex-shrink: 0; margin-top: 0.25rem;"></i>
-                        <div>
-                            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Privacidade Garantida</h4>
-                            <p style="color: var(--color-text-light); font-size: 0.95rem;">Discrição total em todas as negociações de alto padrão.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-card" style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <i class="fas fa-briefcase" style="color: var(--color-accent); font-size: 1.5rem; flex-shrink: 0; margin-top: 0.25rem;"></i>
-                        <div>
-                            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Experiência Comprovada</h4>
-                            <p style="color: var(--color-text-light); font-size: 0.95rem;">CRECI 1743 com anos de atuação no mercado imobiliário.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <i class="fas fa-phone-alt" style="color: var(--color-accent); font-size: 1.5rem; flex-shrink: 0; margin-top: 0.25rem;"></i>
-                        <div>
-                            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Resposta Rápida</h4>
-                            <p style="color: var(--color-text-light); font-size: 0.95rem;">Retorno garantido em até 2 horas comerciais.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Seção de Redes Sociais -->
-        <div class="social-section fade-in" style="text-align: center; background: var(--color-primary-light); padding: 3rem 2rem; border-radius: 8px;">
-            <h3 style="color: var(--color-primary); margin-bottom: 1.5rem;">Conecte-se Conosco</h3>
-            <p style="margin-bottom: 2rem; color: var(--color-text-light);">Siga nossas atualizações e novas listagens nas redes sociais</p>
-            <div style="display: flex; justify-content: center; gap: 2rem;">
-                <a href="https://wa.me/5579998129141" target="_blank" class="social-icon" title="WhatsApp">
+                <a href="https://wa.me/5579998129141?text=Olá%20Cathia!%20Gostaria%20de%20saber%20mais%20sobre%20seus%20imóveis.%20Pode%20me%20ajudar?" target="_blank" class="whatsapp-button">
                     <i class="fab fa-whatsapp"></i>
+                    Abrir WhatsApp
                 </a>
-                <a href="https://instagram.com" target="_blank" class="social-icon" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://facebook.com" target="_blank" class="social-icon" title="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a href="https://linkedin.com" target="_blank" class="social-icon" title="LinkedIn">
-                    <i class="fab fa-linkedin"></i>
-                </a>
+
+                <div class="contact-info">
+                    <h3><i class="fas fa-info-circle"></i> Informações de Contato</h3>
+                    
+                    <div class="info-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <div class="info-item-content">
+                            <h4>WhatsApp</h4>
+                            <p>+55 79 99812-9141</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-item-content">
+                            <h4>E-mail</h4>
+                            <p>cathiaaguiar@hotmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-item-content">
+                            <h4>Horário de Atendimento</h4>
+                            <p>Seg-Sex: 09h às 18h<br>Sábados: Sob agendamento</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="info-item-content">
+                            <h4>Resposta Rápida</h4>
+                            <p>Até 2 horas comerciais</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="contact-right">
+                <h3>Por que Escolher Meu Atendimento?</h3>
+                <p>Tenho experiência comprovada no mercado imobiliário de Aracaju e posso ajudar você em todas as fases da sua busca pelo imóvel ideal.</p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <i class="fas fa-star"></i>
+                        <div>
+                            <h4>Expertise Profissional</h4>
+                            <p>CRECI 1743 com anos de mercado imobiliário</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <i class="fas fa-handshake"></i>
+                        <div>
+                            <h4>Atendimento Personalizado</h4>
+                            <p>Cada cliente tem necessidades únicas e diferentes</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <i class="fas fa-lock"></i>
+                        <div>
+                            <h4>Privacidade Garantida</h4>
+                            <p>Discrição total em todas as transações</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <i class="fas fa-rocket"></i>
+                        <div>
+                            <h4>Resposta Rápida</h4>
+                            <p>Atendimento ágil pelo WhatsApp</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <i class="fas fa-home"></i>
+                        <div>
+                            <h4>Portfólio Exclusivo</h4>
+                            <p>Imóveis de qualidade em ótimas localizações</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <i class="fas fa-medal"></i>
+                        <div>
+                            <h4>Qualidade Assegurada</h4>
+                            <p>Todos os imóveis são cuidadosamente selecionados</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Properties Contact Section -->
+    <div class="properties-contact-section">
+        <div class="properties-contact-header">
+            <h2>Imóveis Disponíveis</h2>
+            <p>Clique no imóvel que te interessar e já envie uma mensagem pela WhatsApp com a informação de qual propriedade você gostaria de conhecer</p>
+        </div>
+
+        <div class="properties-grid" id="propertiesGrid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--color-accent); margin-bottom: 1rem; display: block;"></i>
+                <p style="color: var(--color-text-light);">Carregando imóveis...</p>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">
-            <div class="copyright text-center">&copy; 2025 Cathia Aguiar - Corretora de Imóveis.</div>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo-container">
+                        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M 10 45 L 50 10 L 90 45" />
+                            <path d="M 20 36 V 90 H 80 V 36" />
+                            <path d="M 38 90 V 60 L 50 50 L 62 60 V 90" />
+                            <path d="M 50 75 V 90" />
+                        </svg>
+                        <div class="logo-text">
+                            <span class="logo-title">CATHIA AGUIAR</span>
+                            <span class="logo-subtitle">CORRETORA DE IMÓVEIS</span>
+                            <span class="logo-creci">CRECI 1743</span>
+                        </div>
+                    </a>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Excelência em intermediação imobiliária de residências de médio e alto padrão.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Navegação</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="imoveis.html">Imóveis</a></li>
+                        <li><a href="sobre.html">Sobre Nós</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone" style="color: var(--color-accent); margin-right: 8px;"></i> +55 79 99812-9141</li>
+                        <li><i class="fas fa-envelope" style="color: var(--color-accent); margin-right: 8px;"></i> cathiaaguiar@hotmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Cathia Aguiar - Corretora de Imóveis. Todos os direitos reservados.
+            </div>
         </div>
     </footer>
 
+    <script src="assets/js/main.js"></script>
+
+    <!-- Firebase Script -->
     <script type="module">
-        import { saveContact } from './assets/js/firebase-config.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            query,
+            orderBy
+        } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = 'Enviando...';
-            btn.disabled = true;
-            const feedbackEl = document.getElementById('feedback');
+        const firebaseConfig = {
+            apiKey: "AIzaSyBF03NrHyYFuSUexSpVlBbpdM7hPDxtlnk",
+            authDomain: "cathia-31ee5.firebaseapp.com",
+            databaseURL: "https://cathia-31ee5-default-rtdb.firebaseio.com",
+            projectId: "cathia-31ee5",
+            storageBucket: "cathia-31ee5.firebasestorage.app",
+            messagingSenderId: "405908626614",
+            appId: "1:405908626614:web:9c3585abd8782a3fd71a17",
+            measurementId: "G-Q1EKVQMC23"
+        };
 
-            // Coletar dados do formulário
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            };
-            
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadProperties() {
+            const grid = document.getElementById('propertiesGrid');
             try {
-                // Salvar no Firebase
-                const result = await saveContact(formData);
-                
-                if (result.success) {
-                    // Se Firebase funcionou, preparar email
-                    const emailBody = `Nova mensagem de contato recebida:
+                const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
 
-DADOS DO CONTATO:
-- Nome: ${formData.name}
-- E-mail: ${formData.email}
-- Telefone: ${formData.phone}
-- Interesse: ${formData.subject}
-
-MENSAGEM:
-${formData.message}
-
-Data/Hora: ${new Date().toLocaleString('pt-BR')}
-ID do Registro: ${result.id}`;
-                    
-                    // Enviar por mailto
-                    const mailtoLink = `mailto:cathiaaguiar@hotmail.com?subject=Contato do Site - ${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(emailBody)}`;
-                    
-                    setTimeout(() => {
-                        window.location.href = mailtoLink;
-                    }, 500);
-
-                    // Mostrar feedback positivo
-                    feedbackEl.style.display = 'block';
-                    feedbackEl.style.color = 'var(--color-accent)';
-                    feedbackEl.innerText = '✓ Mensagem registrada com sucesso! Seu cliente de email foi aberto.';
-                    this.reset();
-                    
-                    setTimeout(() => {
-                        feedbackEl.style.display = 'none';
-                    }, 8000);
-                } else {
-                    throw new Error(result.error);
+                if (querySnapshot.empty) {
+                    grid.innerHTML = '<div class="empty-properties" style="grid-column: 1 / -1;"><i class="fas fa-inbox"></i><p>Nenhum imóvel disponível no momento</p></div>';
+                    return;
                 }
+
+                grid.innerHTML = '';
+                let count = 0;
+
+                querySnapshot.forEach((doc) => {
+                    if (count >= 6) return; // Limitar a 6 imóveis
+
+                    const property = doc.data();
+                    const title = property.title || "Sem título";
+                    const price = property.price || 0;
+                    const location = property.location || "Localização";
+                    const bedrooms = property.bedrooms || 0;
+                    const bathrooms = property.bathrooms || 0;
+                    const area = property.area || 0;
+                    const image = property.image || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop";
+                    const propertyType = property.propertyType || "casa";
+
+                    const formattedPrice = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(price);
+
+                    // Criar mensagem WhatsApp
+                    const whatsappMessage = `Olá! Tenho interesse no imóvel "${title}" que vi no seu site. Gostaria de saber mais detalhes sobre essa propriedade. Obrigado!`;
+                    const whatsappLink = `https://wa.me/5579998129141?text=${encodeURIComponent(whatsappMessage)}`;
+
+                    // Features
+                    let featuresHTML = '';
+                    if (propertyType === 'lote') {
+                        featuresHTML = `<span><i class="fas fa-ruler-combined"></i> ${area}m²</span>`;
+                    } else {
+                        featuresHTML = `
+                            <span><i class="fas fa-bed"></i> ${bedrooms}Q</span>
+                            <span><i class="fas fa-bath"></i> ${bathrooms}B</span>
+                            <span><i class="fas fa-ruler-combined"></i> ${area}m²</span>
+                        `;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'property-card-contact';
+                    card.innerHTML = `
+                        <div class="property-card-img">
+                            <img src="${image}" alt="${title}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
+                        </div>
+                        <div class="property-card-content">
+                            <h4>${title}</h4>
+                            <div class="property-card-price">${formattedPrice}</div>
+                            <div class="property-card-meta">
+                                ${featuresHTML}
+                            </div>
+                            <a href="${whatsappLink}" target="_blank" class="property-contact-btn">
+                                <i class="fab fa-whatsapp"></i> Tenho Interesse
+                            </a>
+                        </div>
+                    `;
+
+                    grid.appendChild(card);
+                    count++;
+                });
+
+                if (count === 0) {
+                    grid.innerHTML = '<div class="empty-properties" style="grid-column: 1 / -1;"><i class="fas fa-inbox"></i><p>Nenhum imóvel disponível no momento</p></div>';
+                }
+
             } catch (error) {
-                console.error('Erro:', error);
-                feedbackEl.style.display = 'block';
-                feedbackEl.style.color = '#d9534f';
-                feedbackEl.innerText = '✗ Erro ao enviar. Tente novamente ou ligue: +55 79 99812-9141';
-                
-                setTimeout(() => {
-                    feedbackEl.style.display = 'none';
-                }, 8000);
-            } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                console.error("Erro:", error);
+                grid.innerHTML = '<div class="empty-properties" style="grid-column: 1 / -1;"><i class="fas fa-exclamation-circle"></i><p>Erro ao carregar imóveis</p></div>';
             }
-        });
+        }
+
+        loadProperties();
     </script>
 
-    <script src="assets/js/main.js"></script>
 </body>
 </html>
