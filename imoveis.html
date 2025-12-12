@@ -165,13 +165,32 @@
         /* ===== CARD IMAGE ===== */
         .card-image {
             width: 100% !important;
-            height: 280px !important;
+            height: 320px !important;
             overflow: hidden !important;
             position: relative !important;
             background: linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%) !important;
         }
 
-        .card-image img {
+        .carousel-container-imoveis {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-wrapper-imoveis {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide-imoveis {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide-imoveis img {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
@@ -179,8 +198,90 @@
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        #properties-grid article:hover .card-image img {
+        #properties-grid article:hover .carousel-slide-imoveis img {
             transform: scale(1.08) !important;
+        }
+
+        .carousel-controls-imoveis {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.6rem;
+            z-index: 10;
+        }
+
+        .carousel-dot-imoveis {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .carousel-dot-imoveis.active {
+            background: white;
+            width: 28px;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-dot-imoveis:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .carousel-nav-imoveis {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 11;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        #properties-grid article:hover .carousel-nav-imoveis {
+            opacity: 1;
+        }
+
+        .carousel-nav-imoveis:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav-imoveis.prev-imoveis {
+            left: 1rem;
+        }
+
+        .carousel-nav-imoveis.next-imoveis {
+            right: 1rem;
+        }
+
+        .carousel-counter-imoveis {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 9;
+            backdrop-filter: blur(4px);
         }
 
         .tag-exclusive {
@@ -392,8 +493,7 @@
                 <a href="index.html">Home</a>
                 <a href="imoveis.html" class="active">Imóveis</a>
                 <a href="sobre.html">Sobre</a>
-                <a href="contato.html">Contato</a>
-                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+                <a href="contato.html" class="nav-cta">Agende sua Visita</a>
             </div>
         </div>
     </nav>
@@ -559,6 +659,54 @@
         const propertiesGrid = document.getElementById('properties-grid');
         let allProperties = [];
 
+        // Setup carousel for property cards
+        function setupPropertyCarousel(card) {
+            let currentSlide = 0;
+            const wrapper = card.querySelector('.carousel-wrapper-imoveis');
+            const dots = card.querySelectorAll('.carousel-dot-imoveis');
+            const prevBtn = card.querySelector('.carousel-nav-imoveis.prev-imoveis');
+            const nextBtn = card.querySelector('.carousel-nav-imoveis.next-imoveis');
+            const counter = card.querySelector('.carousel-counter-imoveis');
+            const totalSlides = dots.length;
+
+            if (totalSlides <= 1) return;
+
+            function updateSlide(index) {
+                currentSlide = (index + totalSlides) % totalSlides;
+                wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+
+                counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    updateSlide(currentSlide - 1);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    updateSlide(currentSlide + 1);
+                });
+            }
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    updateSlide(index);
+                });
+            });
+        }
+
         async function loadProperties() {
             try {
                 const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
@@ -618,7 +766,13 @@
                 const bathrooms = property.bathrooms || 0;
                 const area = property.area || 0;
                 const propertyType = property.propertyType || "casa";
-                const image = property.image || "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop";
+                const defaultImage = "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop";
+                
+                // Get images array or fallback to single image
+                const images = (property.images && property.images.length > 0) 
+                    ? property.images 
+                    : [property.image || defaultImage];
+                
                 const exclusive = property.exclusive || false;
 
                 const formattedPrice = new Intl.NumberFormat('pt-BR', {
@@ -658,11 +812,41 @@
                     `;
                 }
 
+                // Create carousel slides
+                const slidesHTML = images
+                    .map((img, i) => `
+                        <div class="carousel-slide-imoveis">
+                            <img src="${img}" alt="${title}" loading="lazy" onerror="this.src='${defaultImage}'">
+                        </div>
+                    `)
+                    .join('');
+
+                // Create carousel dots
+                const dotsHTML = images
+                    .map((_, i) => `<button class="carousel-dot-imoveis ${i === 0 ? 'active' : ''}" type="button"></button>`)
+                    .join('');
+
                 const card = document.createElement('article');
                 card.innerHTML = `
                     <a href="imovel-detalhes.html?id=${property.id}">
                         <div class="card-image">
-                            <img src="${image}" alt="${title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
+                            <div class="carousel-container-imoveis">
+                                <div class="carousel-wrapper-imoveis" style="transform: translateX(0);">
+                                    ${slidesHTML}
+                                </div>
+                                <div class="carousel-counter-imoveis">${images.length > 1 ? '1 / ' + images.length : ''}</div>
+                                <div class="carousel-controls-imoveis">
+                                    ${dotsHTML}
+                                </div>
+                                ${images.length > 1 ? `
+                                    <button class="carousel-nav-imoveis prev-imoveis" type="button">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="carousel-nav-imoveis next-imoveis" type="button">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
                             ${exclusiveTag}
                         </div>
                         <div class="card-content">
@@ -681,6 +865,11 @@
                 `;
 
                 propertiesGrid.appendChild(card);
+                
+                // Setup carousel for this card if it has multiple images
+                if (images.length > 1) {
+                    setupPropertyCarousel(card);
+                }
             });
         }
 

@@ -25,12 +25,37 @@
             background: linear-gradient(135deg, #e0e0e0 0%, #f0f0f0 100%);
         }
 
-        .gallery-main img {
+        .carousel-container-details {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-wrapper-details {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide-details {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-slide-details img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.4s ease;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-main:hover .carousel-slide-details img {
+            transform: scale(1.05);
         }
 
         .gallery-badge {
@@ -43,6 +68,76 @@
             border-radius: 4px;
             font-size: 0.9rem;
             backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .carousel-controls-details {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.8rem;
+            z-index: 10;
+        }
+
+        .carousel-dot-details {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .carousel-dot-details.active {
+            background: white;
+            width: 32px;
+            border-radius: 6px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-dot-details:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+        }
+
+        .carousel-nav-details {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 11;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-main:hover .carousel-nav-details {
+            opacity: 1;
+        }
+
+        .carousel-nav-details:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .carousel-nav-details.prev-details {
+            left: 1.5rem;
+        }
+
+        .carousel-nav-details.next-details {
+            right: 1.5rem;
         }
 
         .gallery-thumbnails {
@@ -288,8 +383,7 @@
                 <a href="index.html">Home</a>
                 <a href="imoveis.html">Imóveis</a>
                 <a href="sobre.html">Sobre</a>
-                <a href="contato.html">Contato</a>
-                <a href="contato.html" class="btn-outline" style="padding: 5px 15px; border: 1px solid #C9A227;">Agendar Visita</a>
+                <a href="contato.html" class="nav-cta">Agende sua Visita</a>
             </div>
         </div>
     </nav>
@@ -382,19 +476,78 @@
         let currentImageIndex = 0;
 
         // Mudar imagem principal
-        window.changeImage = function(index) {
-            currentImageIndex = index;
-            const mainImg = document.querySelector('.gallery-main img');
-            mainImg.src = allImages[index];
-            
-            document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
-                if (i === index) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
-        };
+         window.changeImage = function(index) {
+             currentImageIndex = index;
+             const wrapper = document.querySelector('.carousel-wrapper-details');
+             const counter = document.getElementById('gallery-counter');
+             
+             if (wrapper) {
+                 wrapper.style.transform = `translateX(-${index * 100}%)`;
+             }
+             
+             if (counter) {
+                 counter.textContent = `${index + 1} de ${allImages.length}`;
+             }
+             
+             // Atualiza dots
+             document.querySelectorAll('.carousel-dot-details').forEach((dot, i) => {
+                 dot.classList.toggle('active', i === index);
+             });
+             
+             // Atualiza thumbnails
+             document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+                 if (i === index) {
+                     thumb.classList.add('active');
+                 } else {
+                     thumb.classList.remove('active');
+                 }
+             });
+         };
+
+         // Setup carrossel na página de detalhes
+         window.setupDetailCarousel = function() {
+             const wrapper = document.querySelector('.carousel-wrapper-details');
+             const dots = document.querySelectorAll('.carousel-dot-details');
+             const prevBtn = document.querySelector('.carousel-nav-details.prev-details');
+             const nextBtn = document.querySelector('.carousel-nav-details.next-details');
+             const counter = document.getElementById('gallery-counter');
+
+             if (!wrapper || allImages.length <= 1) return;
+
+             function updateSlide(index) {
+                 currentImageIndex = (index + allImages.length) % allImages.length;
+                 wrapper.style.transform = `translateX(-${currentImageIndex * 100}%)`;
+
+                 dots.forEach((dot, i) => {
+                     dot.classList.toggle('active', i === currentImageIndex);
+                 });
+
+                 if (counter) {
+                     counter.textContent = `${currentImageIndex + 1} de ${allImages.length}`;
+                 }
+             }
+
+             if (prevBtn) {
+                 prevBtn.addEventListener('click', (e) => {
+                     e.preventDefault();
+                     updateSlide(currentImageIndex - 1);
+                 });
+             }
+
+             if (nextBtn) {
+                 nextBtn.addEventListener('click', (e) => {
+                     e.preventDefault();
+                     updateSlide(currentImageIndex + 1);
+                 });
+             }
+
+             dots.forEach((dot, index) => {
+                 dot.addEventListener('click', (e) => {
+                     e.preventDefault();
+                     updateSlide(index);
+                 });
+             });
+         };
 
         async function loadPropertyDetails() {
             if (!propertyId) {
@@ -458,28 +611,57 @@
 
                 const exclusiveTag = exclusive ? '<span class="tag-exclusive">Exclusivo</span>' : '';
 
-                // Gera HTML da galeria
-                let galleryThumbs = '';
-                allImages.forEach((img, i) => {
-                    const activeClass = i === 0 ? 'active' : '';
-                    galleryThumbs += `
-                        <div class="gallery-thumb ${activeClass}" onclick="changeImage(${i})">
-                            <img src="${img}" alt="Imagem ${i + 1}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
-                        </div>
-                    `;
-                });
+                // Gera HTML dos slides do carrossel
+                 const slidesHTML = allImages
+                     .map((img, i) => `
+                         <div class="carousel-slide-details">
+                             <img src="${img}" alt="Imagem ${i + 1}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=800&auto=format&fit=crop'">
+                         </div>
+                     `)
+                     .join('');
 
-                // Renderiza o conteúdo
-                container.innerHTML = `
-                    <div class="property-details">
-                        <div class="property-gallery">
-                            <div class="gallery-main">
-                                <img src="${allImages[0]}" alt="${title}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=800&auto=format&fit=crop'">
-                                ${exclusiveTag}
-                                ${allImages.length > 1 ? `<div class="gallery-badge">${currentImageIndex + 1} de ${allImages.length}</div>` : ''}
-                            </div>
-                            ${allImages.length > 1 ? `<div class="gallery-thumbnails">${galleryThumbs}</div>` : ''}
-                        </div>
+                 // Gera HTML dos dots
+                 const dotsHTML = allImages
+                     .map((_, i) => `<button class="carousel-dot-details ${i === 0 ? 'active' : ''}" type="button"></button>`)
+                     .join('');
+
+                 // Gera HTML da galeria de thumbnails (mantém como fallback)
+                 let galleryThumbs = '';
+                 allImages.forEach((img, i) => {
+                     const activeClass = i === 0 ? 'active' : '';
+                     galleryThumbs += `
+                         <div class="gallery-thumb ${activeClass}" onclick="changeImage(${i})">
+                             <img src="${img}" alt="Imagem ${i + 1}" onerror="this.src='https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=600&auto=format&fit=crop'">
+                         </div>
+                     `;
+                 });
+
+                 // Renderiza o conteúdo
+                 container.innerHTML = `
+                     <div class="property-details">
+                         <div class="property-gallery">
+                             <div class="gallery-main">
+                                 <div class="carousel-container-details">
+                                     <div class="carousel-wrapper-details" style="transform: translateX(0);">
+                                         ${slidesHTML}
+                                     </div>
+                                     ${allImages.length > 1 ? `<div class="gallery-badge" id="gallery-counter">${currentImageIndex + 1} de ${allImages.length}</div>` : ''}
+                                     ${allImages.length > 1 ? `
+                                         <div class="carousel-controls-details">
+                                             ${dotsHTML}
+                                         </div>
+                                         <button class="carousel-nav-details prev-details" type="button">
+                                             <i class="fas fa-chevron-left"></i>
+                                         </button>
+                                         <button class="carousel-nav-details next-details" type="button">
+                                             <i class="fas fa-chevron-right"></i>
+                                         </button>
+                                     ` : ''}
+                                 </div>
+                                 ${exclusiveTag}
+                             </div>
+                             ${allImages.length > 1 ? `<div class="gallery-thumbnails">${galleryThumbs}</div>` : ''}
+                         </div>
                         
                         <div class="property-info">
                             <h2>${title}</h2>
@@ -524,6 +706,11 @@
                 `;
 
                 console.log(`✓ Imóvel carregado: ${title}`);
+                
+                // Setup carrossel se houver múltiplas imagens
+                if (allImages.length > 1) {
+                    setTimeout(() => setupDetailCarousel(), 100);
+                }
 
             } catch (error) {
                 console.error("✗ Erro ao buscar imóvel:", error);

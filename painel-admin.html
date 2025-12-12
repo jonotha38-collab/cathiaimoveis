@@ -148,7 +148,7 @@
 
         .image-preview {
             margin-top: 0.5rem;
-            max-width: 200px;
+            max-width: 100%;
             border-radius: 4px;
             overflow: hidden;
         }
@@ -156,6 +156,128 @@
         .image-preview img {
             width: 100%;
             height: auto;
+        }
+
+        .carousel-gallery {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 1rem;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .carousel-container-admin {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #e8e8e8;
+        }
+
+        .carousel-wrapper-admin {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .carousel-slide-admin {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+        }
+
+        .carousel-slide-admin img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-controls-admin {
+            position: absolute;
+            bottom: 0.8rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .carousel-dot-admin {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid white;
+        }
+
+        .carousel-dot-admin.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-dot-admin:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .carousel-nav-admin {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 11;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-gallery:hover .carousel-nav-admin {
+            opacity: 1;
+        }
+
+        .carousel-nav-admin:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav-admin.prev-admin {
+            left: 0.8rem;
+        }
+
+        .carousel-nav-admin.next-admin {
+            right: 0.8rem;
+        }
+
+        .carousel-counter-admin {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 9;
+            backdrop-filter: blur(4px);
         }
 
         .btn-add-image {
@@ -297,6 +419,21 @@
             background: #ff5252;
         }
 
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-edit:hover {
+            background: #45a049;
+        }
+
         .loading {
             text-align: center;
             padding: 2rem;
@@ -400,7 +537,25 @@
                     <div class="image-inputs" id="imageInputsContainer">
                         <div class="image-input-item">
                             <input type="url" class="property-image" placeholder="URL da Imagem 1 (principal)" required>
-                            <div class="image-preview"></div>
+                            <div class="carousel-gallery" id="carousel-initial">
+                                <div class="carousel-container-admin">
+                                    <div class="carousel-wrapper-admin" style="transform: translateX(0);">
+                                        <div class="carousel-slide-admin">
+                                            <span style="color: #999;">Nenhuma imagem</span>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-counter-admin">1 / 1</div>
+                                    <div class="carousel-controls-admin">
+                                        <button class="carousel-dot-admin active" type="button"></button>
+                                    </div>
+                                    <button class="carousel-nav-admin prev-admin" type="button" style="display: none;">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="carousel-nav-admin next-admin" type="button" style="display: none;">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn-add-image" onclick="addImageInput()">+ Adicionar Mais Imagens</button>
@@ -535,30 +690,130 @@
          };
 
          // Adicionar input de imagem
-         window.addImageInput = function() {
-            const container = document.getElementById('imageInputsContainer');
-            const count = container.children.length + 1;
-            const div = document.createElement('div');
-            div.className = 'image-input-item';
-            div.innerHTML = `
-                <input type="url" class="property-image" placeholder="URL da Imagem ${count}">
-                <div class="image-preview"></div>
-                <button type="button" class="btn-add-image" style="background: #ff6b6b; color: white; margin-top: 0.5rem;" onclick="this.parentElement.remove()">Remover</button>
-            `;
-            container.appendChild(div);
-        };
+          window.addImageInput = function() {
+             const container = document.getElementById('imageInputsContainer');
+             const count = container.children.length + 1;
+             const div = document.createElement('div');
+             div.className = 'image-input-item';
+             
+             const uniqueId = 'carousel-' + Math.random().toString(36).substr(2, 9);
+             
+             div.innerHTML = `
+                 <input type="url" class="property-image" placeholder="URL da Imagem ${count}">
+                 <div class="carousel-gallery" id="${uniqueId}">
+                     <div class="carousel-container-admin">
+                         <div class="carousel-wrapper-admin" style="transform: translateX(0);">
+                             <div class="carousel-slide-admin">
+                                 <span style="color: #999;">Nenhuma imagem</span>
+                             </div>
+                         </div>
+                         <div class="carousel-counter-admin">1 / 1</div>
+                         <div class="carousel-controls-admin">
+                             <button class="carousel-dot-admin active" type="button"></button>
+                         </div>
+                         <button class="carousel-nav-admin prev-admin" type="button" style="display: none;">
+                             <i class="fas fa-chevron-left"></i>
+                         </button>
+                         <button class="carousel-nav-admin next-admin" type="button" style="display: none;">
+                             <i class="fas fa-chevron-right"></i>
+                         </button>
+                     </div>
+                 </div>
+                 <button type="button" class="btn-add-image" style="background: #ff6b6b; color: white; margin-top: 0.5rem;" onclick="this.parentElement.remove()">Remover</button>
+             `;
+             container.appendChild(div);
+         };
 
-        // Preview de imagens
+        // Preview de imagens com carrossel
         document.addEventListener('change', function(e) {
             if (e.target.classList.contains('property-image')) {
-                const preview = e.target.nextElementSibling;
-                if (e.target.value) {
-                    preview.innerHTML = `<img src="${e.target.value}" alt="Preview" onerror="this.parentElement.innerHTML='Erro ao carregar imagem'">`;
-                } else {
-                    preview.innerHTML = '';
+                const carousel = e.target.nextElementSibling;
+                if (!carousel.classList.contains('carousel-gallery')) return;
+                
+                // Coletar todas as URLs de imagem do formulário
+                const allImages = Array.from(document.querySelectorAll('.property-image'))
+                    .map(input => input.value)
+                    .filter(url => url);
+                
+                if (allImages.length === 0) {
+                    // Mostrar placeholder
+                    const wrapper = carousel.querySelector('.carousel-wrapper-admin');
+                    wrapper.innerHTML = `
+                        <div class="carousel-slide-admin">
+                            <span style="color: #999;">Nenhuma imagem</span>
+                        </div>
+                    `;
+                    carousel.querySelector('.carousel-counter-admin').textContent = '1 / 1';
+                    carousel.querySelector('.carousel-controls-admin').innerHTML = '<button class="carousel-dot-admin active" type="button"></button>';
+                    carousel.querySelectorAll('.carousel-nav-admin').forEach(btn => btn.style.display = 'none');
+                    return;
                 }
+                
+                // Atualizar slides do carrossel
+                const wrapper = carousel.querySelector('.carousel-wrapper-admin');
+                wrapper.innerHTML = allImages
+                    .map(url => `<div class="carousel-slide-admin"><img src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='<span style=color:#999>Erro ao carregar</span>'"></div>`)
+                    .join('');
+                
+                // Atualizar dots
+                const controlsDiv = carousel.querySelector('.carousel-controls-admin');
+                controlsDiv.innerHTML = allImages
+                    .map((_, i) => `<button class="carousel-dot-admin ${i === 0 ? 'active' : ''}" type="button"></button>`)
+                    .join('');
+                
+                // Atualizar contador
+                carousel.querySelector('.carousel-counter-admin').textContent = `1 / ${allImages.length}`;
+                
+                // Mostrar/ocultar botões de navegação
+                const navBtns = carousel.querySelectorAll('.carousel-nav-admin');
+                navBtns.forEach(btn => btn.style.display = allImages.length > 1 ? 'flex' : 'none');
+                
+                // Resetar carrossel para primeira imagem
+                wrapper.style.transform = 'translateX(0)';
+                
+                // Setup carrossel
+                setupCarouselForGallery(carousel);
             }
         });
+        
+        // Setup carrossel com navegação
+        window.setupCarouselForGallery = function(gallery) {
+            let currentSlide = 0;
+            const wrapper = gallery.querySelector('.carousel-wrapper-admin');
+            const dots = gallery.querySelectorAll('.carousel-dot-admin');
+            const prevBtn = gallery.querySelector('.carousel-nav-admin.prev-admin');
+            const nextBtn = gallery.querySelector('.carousel-nav-admin.next-admin');
+            const counter = gallery.querySelector('.carousel-counter-admin');
+            const totalSlides = dots.length;
+            
+            function updateSlide(index) {
+                currentSlide = (index + totalSlides) % totalSlides;
+                wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+                
+                counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            }
+            
+            prevBtn.onclick = (e) => {
+                e.preventDefault();
+                updateSlide(currentSlide - 1);
+            };
+            
+            nextBtn.onclick = (e) => {
+                e.preventDefault();
+                updateSlide(currentSlide + 1);
+            };
+            
+            dots.forEach((dot, index) => {
+                dot.onclick = (e) => {
+                    e.preventDefault();
+                    updateSlide(index);
+                };
+            });
+        };
 
         // Submit form
         document.getElementById('propertyForm').addEventListener('submit', async function(e) {
@@ -660,9 +915,27 @@
                     property.images.forEach((imgUrl, index) => {
                         const div = document.createElement('div');
                         div.className = 'image-input-item';
+                        const uniqueId = 'carousel-' + Math.random().toString(36).substr(2, 9);
+                        
                         div.innerHTML = `
                             <input type="url" class="property-image" placeholder="URL da Imagem ${index + 1}" value="${imgUrl}">
-                            <div class="image-preview"><img src="${imgUrl}" alt="Preview" style="width: 100%; height: auto; border-radius: 4px;"></div>
+                            <div class="carousel-gallery" id="${uniqueId}">
+                                <div class="carousel-container-admin">
+                                    <div class="carousel-wrapper-admin" style="transform: translateX(0);">
+                                        <div class="carousel-slide-admin"><img src="${imgUrl}" alt="Preview" style="object-fit: cover;"></div>
+                                    </div>
+                                    <div class="carousel-counter-admin">1 / 1</div>
+                                    <div class="carousel-controls-admin">
+                                        <button class="carousel-dot-admin active" type="button"></button>
+                                    </div>
+                                    <button class="carousel-nav-admin prev-admin" type="button" style="display: none;">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="carousel-nav-admin next-admin" type="button" style="display: none;">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
                             ${index > 0 ? '<button type="button" class="btn-add-image" style="background: #ff6b6b; color: white; margin-top: 0.5rem;" onclick="this.parentElement.remove()">Remover</button>' : ''}
                         `;
                         imageContainer.appendChild(div);
@@ -670,9 +943,29 @@
                 } else {
                     const div = document.createElement('div');
                     div.className = 'image-input-item';
+                    const uniqueId = 'carousel-' + Math.random().toString(36).substr(2, 9);
+                    
                     div.innerHTML = `
                         <input type="url" class="property-image" placeholder="URL da Imagem 1 (principal)">
-                        <div class="image-preview"></div>
+                        <div class="carousel-gallery" id="${uniqueId}">
+                            <div class="carousel-container-admin">
+                                <div class="carousel-wrapper-admin" style="transform: translateX(0);">
+                                    <div class="carousel-slide-admin">
+                                        <span style="color: #999;">Nenhuma imagem</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-counter-admin">1 / 1</div>
+                                <div class="carousel-controls-admin">
+                                    <button class="carousel-dot-admin active" type="button"></button>
+                                </div>
+                                <button class="carousel-nav-admin prev-admin" type="button" style="display: none;">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="carousel-nav-admin next-admin" type="button" style="display: none;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
                     `;
                     imageContainer.appendChild(div);
                 }
@@ -753,13 +1046,13 @@
                              ${property.exclusive ? '<p style="color: #C9A227;"><strong>✨ Exclusivo</strong></p>' : ''}
                          </div>
                         <div class="property-actions">
-                            <button class="btn-edit" onclick="editProperty('${doc.id}')" style="background: #4CAF50; color: white; padding: 0.6rem 1rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s; margin-right: 0.5rem;">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn-delete" onclick="deleteProperty('${doc.id}')">
-                                <i class="fas fa-trash"></i> Deletar
-                            </button>
-                        </div>
+                             <button class="btn-edit" onclick="editProperty('${doc.id}')">
+                                 <i class="fas fa-edit"></i> Editar
+                             </button>
+                             <button class="btn-delete" onclick="deleteProperty('${doc.id}')">
+                                 <i class="fas fa-trash"></i> Deletar
+                             </button>
+                         </div>
                     `;
                     list.appendChild(item);
                 });
